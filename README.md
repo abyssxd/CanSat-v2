@@ -4,15 +4,15 @@ Last year, I coded a dashboard for a cansat competition, it had a python process
 
 <table>
   <tr>
-    <td><img src="images/console.png" alt="Console" width="200"/></td>
-    <td><img src="images/dash.png" alt="Dashboard" width="200"/></td>
+    <td><img src="images/console.png" alt="Console" width="400"/></td>
+    <td><img src="images/dash.png" alt="Dashboard" width="400"/></td>
   </tr>
   <tr>
-    <td><img src="images/status.png" alt="Status" width="200"/></td>
-    <td><img src="images/graphs.png" alt="Graphs" width="200"/></td>
+    <td><img src="images/status.png" alt="Status" width="400"/></td>
+    <td><img src="images/graphs.png" alt="Graphs" width="400"/></td>
   </tr>
   <tr>
-    <td colspan="2" align="center"><img src="images/gyro.png" alt="Gyro" width="200"/></td>
+    <td colspan="2" align="center"><img src="images/gyro.png" alt="Gyro" width="400"/></td>
   </tr>
 </table>
 
