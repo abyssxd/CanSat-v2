@@ -1,0 +1,89 @@
+/* General Styles */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Main Content */
+.content {
+    margin-left: 250px;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+@media (max-width: 768px) {
+    .content {
+        margin-left: 0;
+    }
+}
+
+h1, h2 {
+    text-align: center;
+    color: #e0e0e0;
+}
+
+/* Chart Container (2x2 Grid) */
+.chartContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Larger Charts */
+.chart {
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 80%;
+    margin: 0 auto;
+    background-color: #1e1e1e;  /* Updated from white to dark */
+    color: #e0e0e0;            /* Light text */
+}
+
+/* Map Section */
+#map {
+    height: 500px;
+    width: 90%;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Download Buttons */
+.download {
+    display: block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    background: #333;
+    color: #e0e0e0;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.download:hover {
+    background: #444;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .chartContainer {
+        grid-template-columns: 1fr;
+    }
+
+    #map {
+        width: 100%;
+    }
+    .chart {
+    max-width: 320px;
+    }
+}

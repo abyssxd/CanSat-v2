@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Console - Vila2Sat Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Optional: Chart.js if needed -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Shared Navigation & Global Styles -->
+  <link rel="stylesheet" type="text/css" href="css/nav.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  
+  <!-- Console-specific Styles -->
+  <link rel="stylesheet" type="text/css" href="css/console.css">
+</head>
+<body>
+  <!-- Sidebar (shared across pages) -->
+  <div class="sidebar" id="sidebar">
+      <button class="close-btn" onclick="toggleSidebar()">×</button>
+      <h2>Vila2Sat</h2>
+      <ul>
+          <li><a href="console.html">Console</a></li>
+          <li><a href="index.html">Overview</a></li>
+          <li><a href="status.html">System Status</a></li>
+          <li><a href="charts.html">Graphs</a></li>
+          <li><a href="gyro.html">Gyroscope</a></li>
+          <li><a href="https://github.com/abyssxd/cansat_vila2sat" target="_blank">GitHub</a></li>
+      </ul>
+  </div>
+  
+  <!-- Sidebar Toggle Button (visible on mobile) -->
+  <button class="open-btn" onclick="toggleSidebar()">☰</button>
+  
+  <!-- Main Content -->
+  <div class="content">
+      <h1>Console</h1>
+      <hr>
+      
+      <!-- Log Area for Raw Serial Data (from the ESP32) -->
+      <div id="consoleArea">
+          <pre id="consoleOutput">Waiting for incoming serial data...</pre>
+      </div>
+      
+      <!-- Control Buttons for CSV, KML, Reset, etc. -->
+      <div id="controls">
+          <button id="downloadCsvBtn">Download CSV</button>
+          <button id="downloadKmlBtn">Download KML</button>
+          <button id="resetCsvBtn">Reset CSV</button>
+      </div>
+      
+      <!-- Backups Management Section -->
+      <div id="backupsSection">
+          <h2>Backups</h2>
+          <ul id="backupList"></ul>
+      </div>
+  </div>
+  
+  <!-- Sidebar Toggle Script -->
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("active");
+    }
+  </script>
+  
+  <!-- Console Page Script -->
+  <script>
+    // Connect to WebSocket for receiving raw serial data from the ESP32 (or similar device)
+    const ws = new WebSocket('ws://localhost:3000/console');
+    
+    ws.onopen = function() {
+      appendLog('WebSocket connection established for raw serial data.');
+    };
+    
+    ws.onmessage = function(event) {
+      appendLog(event.data);
+    };
+    
+    ws.onerror = function(error) {
+      appendLog('WebSocket error: ' + error);
+    };
+    
+    ws.onclose = function(event) {
+      appendLog('WebSocket connection closed (' + event.code + ').');
+    };
+    
+    // Append incoming data to the console log area
+    function appendLog(message) {
+      const consoleOutput = document.getElementById("consoleOutput");
+      consoleOutput.textContent += message + "\n";
+      consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    }
+    
+    // Download CSV file
+    document.getElementById("downloadCsvBtn").addEventListener("click", function() {
+      window.location.href = "/download/csv"; // Adjust endpoint as needed
+    });
+    
+    // Download KML file
+    document.getElementById("downloadKmlBtn").addEventListener("click", function() {
+      window.location.href = "/download/kml"; // Adjust endpoint as needed
+    });
+    
+    // Reset CSV file (with confirmation)
+    document.getElementById("resetCsvBtn").addEventListener("click", function() {
+      if (confirm("Are you sure you want to reset the CSV?")) {
+        fetch('/reset/csv', { method: 'POST' })
+          .then(response => response.text())
+          .then(result => {
+            appendLog("CSV reset: " + result);
+          })
+          .catch(error => {
+            appendLog("Error resetting CSV: " + error);
+          });
+      }
+    });
+    
+    // Function to load the list of backups from the server
+    function loadBackups() {
+      fetch('/backups')
+        .then(response => response.json())
+        .then(data => {
+          const backupList = document.getElementById("backupList");
+          backupList.innerHTML = "";
+          data.forEach(backup => {
+            const li = document.createElement("li");
+            li.textContent = backup.filename + " (" + backup.timestamp + ")";
+            
+            // Download backup button
+            const downloadBtn = document.createElement("button");
+            downloadBtn.textContent = "Download";
+            downloadBtn.addEventListener("click", function() {
+              window.location.href = "/download/backup?file=" + encodeURIComponent(backup.filename);
+            });
+            
+            // Delete backup button
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "Delete";
+            deleteBtn.addEventListener("click", function() {
+              if (confirm("Delete backup " + backup.filename + "?")) {
+                fetch('/delete/backup?file=' + encodeURIComponent(backup.filename), { method: 'DELETE' })
+                  .then(response => response.text())
+                  .then(result => {
+                    appendLog("Deleted backup: " + backup.filename);
+                    loadBackups();
+                  })
+                  .catch(error => {
+                    appendLog("Error deleting backup: " + error);
+                  });
+              }
+            });
+            
+            li.appendChild(downloadBtn);
+            li.appendChild(deleteBtn);
+            backupList.appendChild(li);
+          });
+        })
+        .catch(error => {
+          appendLog("Error loading backups: " + error);
+        });
+    }
+    
+    // Load backups on page load
+    loadBackups();
+  </script>
+</body>
+</html>

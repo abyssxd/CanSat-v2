@@ -1,0 +1,251 @@
+/* Dark theme Status Page */
+
+/* General Styles */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    max-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Title */
+.title {
+    display: flex;
+    min-height: 50px;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-bottom: -15px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #e0e0e0;
+}
+
+/* Horizontal Rule */
+hr {
+    width: 100%;
+    border: 1px solid #444;
+    margin-bottom: 20px;
+}
+
+/* Error Block */
+.error {
+    background-color: #e24a4a;
+    color: white;
+    text-align: center;
+    width: 90%;
+    border-radius: 8px;
+    border: 2px solid #222;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.errorContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2vh;
+}
+
+/* Main Container */
+.container {
+    margin: 10px 2.5%;
+}
+
+/* Block Container */
+.blockContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 2vh;
+}
+
+/* Block Title */
+.blockTitle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    margin: -10px;
+}
+
+/* Block Body */
+.blockBody {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Automatic margin for footer */
+.automargin {
+    margin-top: auto;
+}
+
+/* Block Footer */
+.blockFooter {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: auto;
+}
+
+/* Map Styling */
+#map {
+    height: 700px;
+    width: 40%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+
+/* Component Status Cards */
+.block {
+    display: flex;
+    flex-direction: column;
+    width: 12vw;
+    height: 50vh;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    margin: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Status Block (for component status) */
+.statusblock {
+    background-color: #e24a4a;
+    color: white;
+    border-radius: 10px;
+    width: 50%;
+    margin-top: -10px;
+}
+
+/* Main Status Block */
+.mainStatusblock {
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    background-color: #e24a4a;
+    color: white;
+    border-radius: 10px;
+    width: 45%;
+    height: 5vh;
+    margin: 20px;
+}
+
+/* Special Block (for additional information) */
+.specialBlock {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 80%;
+    height: 8vh;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    margin: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    font-size: 18px;
+}
+
+/* Sub Special Block */
+.subSpecialBlock {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Download Buttons */
+.download {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.download a {
+    background-color: #333;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-decoration: none;
+    margin: 5px;
+    cursor: pointer;
+    color: #e0e0e0;
+}
+
+.temperature a {
+    color: rgba(237, 125, 49, 1);
+}
+
+.altitude a {
+    color: rgba(106, 90, 205, 1);
+}
+
+.pressure a {
+    color: rgba(112, 173, 71, 1);
+}
+
+.velocity a {
+    color: rgba(220, 20, 60, 1);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .chart {
+        width: 90%;
+        margin: 10px auto;
+    }
+    .chartContainer {
+        justify-content: center;
+        max-width: 100%;
+    }
+    h1 {
+        margin-left: 0;
+        text-align: center;
+    }
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 20px;
+        flex-direction: column;
+        align-items: baseline;
+    }
+    #map {
+        width: 100%;
+    }
+    .block {
+        width: 100%;
+        height: auto;
+    }
+    .specialBlock {
+        height: 14vh;
+    }
+    .mainStatusblock {
+        width: 100%;
+        margin: 10px;
+    }
+}
+
+@media screen and (max-width: 945px) {
+    .block {
+        width: 35vh;
+        height: auto;
+    }
+}

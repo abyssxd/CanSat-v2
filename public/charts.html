@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vila2Sat Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/charts.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="css/nav.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body onload="showTemp()">
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <button class="close-btn" onclick="toggleSidebar()">×</button>
+    <h2>Vila2Sat</h2>
+    <ul>
+      <li><a href="console.html">Console</a></li>
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="status.html">System Status</a></li>
+      <li><a href="charts.html">Graphs</a></li>
+      <li><a href="gyro.html">Gyroscope</a></li>
+      <li><a href="https://github.com/abyssxd/cansat_vila2sat" target="_blank">GitHub</a></li>
+    </ul>
+  </div>
+
+  <!-- Sidebar Toggle Button (Visible on Mobile) -->
+  <button class="open-btn" onclick="toggleSidebar()">☰</button>
+
+  <!-- Main Content -->
+  <div class="content">
+        <div class="title">
+        <a class="temp_show" onclick="showTemp()">Tempreature</a><a class="pressure_show" onclick="showPressure()">Pressure</a><a class="altitude_show" onclick="showAltitude()">Altitude</a><a class="velocity_show" onclick="showVelocity()">Velocity</a>
+    </div>
+    <hr>
+
+    <div class="container">
+        <div class="chartContainer">
+
+            <div id="tempchart" class="chart">
+                <canvas id="temperature"></canvas>
+                <div class="download temperature">
+                    <a id="temp_png">Download Chart Image</a>
+                </div>
+            </div>
+
+            <div id="preschart" class="chart">
+                <canvas id="pressure"></canvas>
+                <div class="download pressure">
+                    <a id="pressure_png">Download Chart Image</a>
+                </div>
+            </div>
+
+            <div id="altichart" class="chart">
+                <canvas id="altitude"></canvas>
+                <div class="download altitude">
+                    <a id="altitude_png">Download Chart Image</a>
+                </div>
+            </div>
+
+
+            <div id="velochart" class="chart">
+                <canvas id="velocity"></canvas>
+                <div class="download velocity">
+                    <a id="velocity_png">Download Chart Image</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="js/charts.js"></script>
+    </div>
+
+  <!-- Sidebar Toggle Script -->
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("active");
+    }
+  </script>
+</body>
+</html>
