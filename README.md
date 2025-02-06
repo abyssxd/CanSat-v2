@@ -70,7 +70,7 @@ cansat-dashboard/
   In `lib/mysqlHandler.js`, update the MySQL configuration (`host`, `port`, `database`, `user`, and `password`) as needed.
 
 ### 🔹 4. Start the Server
-`npm start`
+- `npm start`
 
 ### 🔹 5. View the Dashboard
 - Open your web browser and navigate to [http://localhost:3000](http://localhost:3000) to see the live dashboard updating as new sensor data is received.
