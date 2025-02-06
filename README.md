@@ -57,8 +57,8 @@ cansat-dashboard/
 
 ## 🚀 How to Use
 ### 🔹 1. Clone the Repository
-`git clone https://github.com/your-repo/cansat-dashboard.git`
-`cd cansat-dashboard`
+- `git clone https://github.com/your-repo/cansat-dashboard.git`
+- `cd cansat-dashboard`
 
 ### 🔹 2. Install Dependencies
 - `npm install`
