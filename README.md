@@ -90,16 +90,11 @@ CANSAT-V2/
 - **Dashboard Interface:**  
   The client-side code in `public/client.js` connects to the WebSocket server and updates the HTML (in `index.html`) in real time as new CSV data arrives.
 
-### 3️⃣ MySQL Integration
-- A MySQL connection pool is set up in `mysqlHandler.js` using the `mysql2` package.
-- When the application starts, the module checks if an old `sensor_data` table exists, renames it with a timestamp, and creates a new `sensor_data` table.
-- Each sensor data set is inserted into the MySQL table.
-
-### 4️⃣ KML File Generation
+### 3️⃣ KML File Generation
 - A KML file is created to track the sensor’s coordinates.
 - As new coordinate data is received, the KML file is updated with a new line string representing the sensor's path and a "LookAt" view focusing on the latest coordinates.
 
-### 5️⃣ Backups
+### 4️⃣ Backups
 - Backup copies of the CSV and KML files are created and updated regularly. This ensures data integrity and provides a historical record.
 
 ## 🚀 How to Use
