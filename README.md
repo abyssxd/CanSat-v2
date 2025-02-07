@@ -5,14 +5,15 @@ Last year, I coded a dashboard for a cansat competition, it had a python process
 <table>
   <tr>
     <td><img src="images/console.png" alt="Console" width="400"/></td>
-    <td><img src="images/dash.png" alt="Dashboard" width="400"/></td>
+    <td><img src="images/status.png" alt="Dashboard" width="400"/></td>
   </tr>
   <tr>
-    <td><img src="images/status.png" alt="Status" width="400"/></td>
+    <td><img src="images/dash.png" alt="Status" width="400"/></td>
+    <td><img src="images/map.png" alt="Graphs" width="400"/></td>
+  </tr>
+    <tr>
+    <td><img src="images/gyro.png" alt="Status" width="400"/></td>
     <td><img src="images/graphs.png" alt="Graphs" width="400"/></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center"><img src="images/gyro.png" alt="Gyro" width="400"/></td>
   </tr>
 </table>
 
@@ -81,8 +82,6 @@ cansat-dashboard/
 ### 🔹 3. Configure the Application
 - **Serial Port:**  
   In `lib/serialReader.js`, adjust the `portName` variable to match your device’s serial port.
-- **MySQL Settings:**  
-  In `lib/mysqlHandler.js`, update the MySQL configuration (`host`, `port`, `database`, `user`, and `password`) as needed.
 
 ### 🔹 4. Start the Server
 - `npm start`

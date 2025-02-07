@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "express": "^4.21.2",
+    "jszip": "^3.10.1",
+    "mysql2": "^3.12.0",
+    "pica": "^9.0.1",
+    "serialport": "^13.0.0",
+    "ws": "^8.18.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "cansat-v2",
+  "description": "Last year, I coded a dashboard for a cansat competition, it had a python processing script and a node.js dashboard. This project combines those two into a single Node.js application. It reads sensor data from a serial port, processes and logs it to CSV and MySQL, creates and updates a KML file for mapping, and broadcasts updates to a web dashboard via WebSocket.",
+  "version": "1.0.0",
+  "main": "server.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abyssxd/CanSat-v2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abyssxd/CanSat-v2/issues"
+  },
+  "homepage": "https://github.com/abyssxd/CanSat-v2#readme"
+}

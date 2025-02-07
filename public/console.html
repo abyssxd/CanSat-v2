@@ -22,11 +22,11 @@
       <h2>Vila2Sat</h2>
       <ul>
           <li><a href="console.html">Console</a></li>
-          <li><a href="index.html">Overview</a></li>
           <li><a href="status.html">System Status</a></li>
-          <li><a href="charts.html">Graphs</a></li>
+          <li><a href="index.html">Overview</a></li>
           <li><a href="gyro.html">Gyroscope</a></li>
-          <li><a href="https://github.com/abyssxd/CanSat-v2" target="_blank">GitHub</a></li>
+          <li><a href="charts.html">Graphs</a></li>
+          <li><a href="https://github.com/abyssxd/cansat_vila2sat" target="_blank">GitHub</a></li>
       </ul>
   </div>
   
@@ -53,6 +53,10 @@
       <!-- Backups Management Section -->
       <div id="backupsSection">
           <h2>Backups</h2>
+          <div id="backupControls">
+              <label><input type="checkbox" id="selectAllBackups"> Select All</label>
+              <button id="deleteSelectedBtn">Delete Selected</button>
+          </div>
           <ul id="backupList"></ul>
       </div>
   </div>
@@ -65,105 +69,7 @@
     }
   </script>
   
-  <!-- Console Page Script -->
-  <script>
-    // Connect to WebSocket for receiving raw serial data from the ESP32 (or similar device)
-    const ws = new WebSocket('ws://localhost:3000/console');
-    
-    ws.onopen = function() {
-      appendLog('WebSocket connection established for raw serial data.');
-    };
-    
-    ws.onmessage = function(event) {
-      appendLog(event.data);
-    };
-    
-    ws.onerror = function(error) {
-      appendLog('WebSocket error: ' + error);
-    };
-    
-    ws.onclose = function(event) {
-      appendLog('WebSocket connection closed (' + event.code + ').');
-    };
-    
-    // Append incoming data to the console log area
-    function appendLog(message) {
-      const consoleOutput = document.getElementById("consoleOutput");
-      consoleOutput.textContent += message + "\n";
-      consoleOutput.scrollTop = consoleOutput.scrollHeight;
-    }
-    
-    // Download CSV file
-    document.getElementById("downloadCsvBtn").addEventListener("click", function() {
-      window.location.href = "/download/csv"; // Adjust endpoint as needed
-    });
-    
-    // Download KML file
-    document.getElementById("downloadKmlBtn").addEventListener("click", function() {
-      window.location.href = "/download/kml"; // Adjust endpoint as needed
-    });
-    
-    // Reset CSV file (with confirmation)
-    document.getElementById("resetCsvBtn").addEventListener("click", function() {
-      if (confirm("Are you sure you want to reset the CSV?")) {
-        fetch('/reset/csv', { method: 'POST' })
-          .then(response => response.text())
-          .then(result => {
-            appendLog("CSV reset: " + result);
-          })
-          .catch(error => {
-            appendLog("Error resetting CSV: " + error);
-          });
-      }
-    });
-    
-    // Function to load the list of backups from the server
-    function loadBackups() {
-      fetch('/backups')
-        .then(response => response.json())
-        .then(data => {
-          const backupList = document.getElementById("backupList");
-          backupList.innerHTML = "";
-          data.forEach(backup => {
-            const li = document.createElement("li");
-            li.textContent = backup.filename + " (" + backup.timestamp + ")";
-            
-            // Download backup button
-            const downloadBtn = document.createElement("button");
-            downloadBtn.textContent = "Download";
-            downloadBtn.addEventListener("click", function() {
-              window.location.href = "/download/backup?file=" + encodeURIComponent(backup.filename);
-            });
-            
-            // Delete backup button
-            const deleteBtn = document.createElement("button");
-            deleteBtn.textContent = "Delete";
-            deleteBtn.addEventListener("click", function() {
-              if (confirm("Delete backup " + backup.filename + "?")) {
-                fetch('/delete/backup?file=' + encodeURIComponent(backup.filename), { method: 'DELETE' })
-                  .then(response => response.text())
-                  .then(result => {
-                    appendLog("Deleted backup: " + backup.filename);
-                    loadBackups();
-                  })
-                  .catch(error => {
-                    appendLog("Error deleting backup: " + error);
-                  });
-              }
-            });
-            
-            li.appendChild(downloadBtn);
-            li.appendChild(deleteBtn);
-            backupList.appendChild(li);
-          });
-        })
-        .catch(error => {
-          appendLog("Error loading backups: " + error);
-        });
-    }
-    
-    // Load backups on page load
-    loadBackups();
-  </script>
+  <!-- External Console JS -->
+  <script src="js/console.js"></script>
 </body>
 </html>

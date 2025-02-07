@@ -2,107 +2,118 @@ import * as THREE from 'https://unpkg.com/three@0.127.0/build/three.module.js';
 import { OBJLoader } from 'https://unpkg.com/three@0.127.0/examples/jsm/loaders/OBJLoader.js';
 import { MTLLoader } from 'https://unpkg.com/three@0.127.0/examples/jsm/loaders/MTLLoader.js';
 
-
 async function initCanSatVisualization() {
     const container = document.getElementById('cansatContainer');
+    if (!container) {
+        console.error("cansatContainer not found in DOM");
+        return;
+    }
 
-    // Scene setup for the 3d model, controls the colors, lights, camera...etc
+    // Set up scene, camera, and renderer
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(69, container.offsetWidth / container.offsetHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer();
+    const camera = new THREE.PerspectiveCamera(
+        69, 
+        container.offsetWidth / container.offsetHeight, 
+        0.1, 
+        1000
+    );
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(container.offsetWidth, container.offsetHeight);
+    // Set clear color to a dark tone for the dark theme
+    renderer.setClearColor(0x121212);
     container.appendChild(renderer.domElement);
 
-    // Move the camera further back
+    // Position the camera
     camera.position.set(0, 0, 300);
-    
-    // Look at the center of the scene
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-    // Lighting to make it look cool
+    // Add lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(ambientLight);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight.position.set(0, 1, 1);
     scene.add(directionalLight);
-    renderer.setClearColor(0xABB8C3); // Set to white or any contrasting color
+
     let cansatModel;
 
-
-// Load MTL file
-const mtlLoader = new MTLLoader();
-mtlLoader.load('models/obj.mtl', function (materials) {
-    materials.preload();
-
-    // Load OBJ file
-    const objLoader = new OBJLoader();
-    objLoader.setMaterials(materials);
-    objLoader.load('models/demo.obj', function (obj) {
-        cansatModel = obj;
-        scene.add(cansatModel);
-        //cansatModel.position.set(-4.5, -10, 0);
+    // Load the model using MTL and OBJ loaders
+    const mtlLoader = new MTLLoader();
+    mtlLoader.load('models/obj.mtl', function (materials) {
+        materials.preload();
+        const objLoader = new OBJLoader();
+        objLoader.setMaterials(materials);
+        objLoader.load('models/demo.obj', function (obj) {
+            cansatModel = obj;
+            scene.add(cansatModel);
+        });
     });
-});
-    
+
+    // Create a target quaternion for smooth rotation
     let targetQuaternion = new THREE.Quaternion();
 
-    ws.onmessage = (event) => {
+    // Create a dedicated WebSocket for visualization updates
+    const wsVis = new WebSocket('ws://localhost:3000/visualization');
+
+    wsVis.onopen = function() {
+        console.log('Visualization WebSocket connection established');
+    };
+
+    wsVis.onerror = function(error) {
+        console.error('Visualization WebSocket Error:', error);
+    };
+
+    wsVis.onclose = function(event) {
+        console.log('Visualization WebSocket connection closed', event.code, event.reason);
+    };
+
+    wsVis.onmessage = (event) => {
         const csvData = parseCSV(event.data);
+        if (csvData.length === 0) return;
         const latestData = csvData[csvData.length - 1];
-    
+
+        // Update targetQuaternion using gyro data (assumed to be in columns 9,10,11: indexes 8,9,10)
         targetQuaternion.setFromEuler(new THREE.Euler(
             THREE.MathUtils.degToRad(Number(latestData[10])),
             THREE.MathUtils.degToRad(Number(latestData[8])),
             THREE.MathUtils.degToRad(Number(latestData[9])),
             'ZXY'
         ));
-        
-        let gryo_x = latestData[8];
-        let gryo_y = latestData[9];
-        let gryo_z = latestData[10];
 
-        document.getElementById("gyroX").innerHTML = "X: " + gryo_x;
-        document.getElementById("gyroY").innerHTML = "Y: " + gryo_y;
-        document.getElementById("gyroZ").innerHTML = "Z: " + gryo_z;
-    
-        console.log("Target rotation updated"); //Debug
+        // Update HTML elements (if they exist) with the gyro values
+        const gyroXElem = document.getElementById("gyroX");
+        const gyroYElem = document.getElementById("gyroY");
+        const gyroZElem = document.getElementById("gyroZ");
+        if (gyroXElem) gyroXElem.innerHTML = "X: " + latestData[8];
+        if (gyroYElem) gyroYElem.innerHTML = "Y: " + latestData[9];
+        if (gyroZElem) gyroZElem.innerHTML = "Z: " + latestData[10];
+
+        console.log("Target rotation updated");
     };
-    
-function animate() {
-    requestAnimationFrame(animate);
 
-    if (cansatModel) {
-        // Use slerp (Spherical Linear Interpolation) for a smoother animation
-        cansatModel.quaternion.slerp(targetQuaternion, 0.05);
+    // Animation loop
+    function animate() {
+        requestAnimationFrame(animate);
+        if (cansatModel) {
+            // Slerp for smooth interpolation
+            cansatModel.quaternion.slerp(targetQuaternion, 0.05);
+        }
+        renderer.render(scene, camera);
     }
-
-    renderer.render(scene, camera);
-}
     animate();
-    
+
+    // Handle window resizing
+    window.addEventListener('resize', () => {
+        camera.aspect = container.offsetWidth / container.offsetHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.offsetWidth, container.offsetHeight);
+    });
 }
 
-//Websocket connection ---- START
-const ws = new WebSocket('ws://localhost:3000');
-
-ws.onopen = function() {
-    console.log('WebSocket connection established');
-};
-
-ws.onerror = function(error) {
-    console.error('WebSocket Error:', error);
-};
-
-ws.onclose = function(event) {
-    console.log('WebSocket connection closed', event.code, event.reason);
-};
-//Websocket connection ---- END
-
+// Create a dedicated WebSocket connection for visualization updates inside this module
 
 initCanSatVisualization().catch(error => console.error(error));
 
-
-
-//Function to parse the CSV & tirm the values. This should work both on windows and linux.
+// CSV parsing function (compatible with both Windows and Linux)
 function parseCSV(csvString) {
     const rows = csvString.trim().split(/\r?\n/);
     return rows.map(row => row.split(',').map(cell => cell.trim()));

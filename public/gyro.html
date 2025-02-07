@@ -14,7 +14,8 @@
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <link rel="stylesheet" type="text/css" href="css/nav.css">
   <link rel="stylesheet" type="text/css" href="css/gyro.css">
-  <script src="js/script.js" defer></script>
+  <!-- Notice the type="module" attribute here -->
+  <script type="module" src="js/gyro.js"></script>
 </head>
 <body>
   <!-- Sidebar -->
@@ -23,10 +24,10 @@
       <h2>Vila2Sat</h2>
       <ul>
           <li><a href="console.html">Console</a></li>
-          <li><a href="index.html">Overview</a></li>
           <li><a href="status.html">System Status</a></li>
-          <li><a href="charts.html">Graphs</a></li>
+          <li><a href="index.html">Overview</a></li>
           <li><a href="gyro.html">Gyroscope</a></li>
+          <li><a href="charts.html">Graphs</a></li>
           <li><a href="https://github.com/abyssxd/CanSat-v2" target="_blank">GitHub</a></li>
       </ul>
   </div>
@@ -41,7 +42,7 @@
       <!-- Optional Additional Content (e.g., a Cansat display container) -->
       <div id="cansatContainer"></div>
 
-            <!-- Gyroscope Display Section -->
+      <!-- Gyroscope Display Section -->
       <div class="gyroContainer">
           <div class="gyroscope">
               <h2>Gyroscope (DEG)</h2>

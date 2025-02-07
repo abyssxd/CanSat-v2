@@ -1,90 +1,123 @@
-/* console.css – Styles specific to the Console Page */
-
-/* Console Log Area */
 #consoleArea {
-    background-color: #1e1e1e;
-    color: #e0e0e0;
-    border: 1px solid #444;
-    border-radius: 8px;
-    padding: 10px;
-    height: 300px;
-    overflow-y: auto;
-    margin-bottom: 20px;
-  }
-  
-  #consoleOutput {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    font-family: monospace;
-    font-size: 14px;
-  }
-  
-  /* Control Buttons */
-  #controls {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  #controls button {
-    background-color: #333;
-    color: #e0e0e0;
-    border: none;
-    padding: 10px 20px;
-    margin: 0 5px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  #controls button:hover {
-    background-color: #444;
-  }
-  
-  /* Backups Management Section */
-  #backupsSection {
-    background-color: #1e1e1e;
-    border: 1px solid #444;
-    border-radius: 8px;
-    padding: 10px;
-    margin: 0 20px 20px 20px;
-  }
-  
-  #backupsSection h2 {
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  
-  #backupList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  #backupList li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #333;
-    padding: 5px 10px;
-    margin-bottom: 5px;
-    border-radius: 4px;
-  }
-  
-  #backupList li button {
-    background-color: #555;
-    color: #e0e0e0;
-    border: none;
-    padding: 5px 10px;
-    margin-left: 5px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  #backupList li button:hover {
-    background-color: #666;
-  }
-  
-  #resetCsvBtn {
-    background-color: #c73636 !important;
-  }
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 10px;
+  height: 600px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+/* Custom Dark Scrollbar */
+#consoleArea::-webkit-scrollbar {
+  width: 8px;
+}
+#consoleArea::-webkit-scrollbar-track {
+  background: #1e1e1e;
+  border-radius: 8px;
+}
+#consoleArea::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 8px;
+}
+
+/* Console Output */
+#consoleOutput {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+/* Control Buttons */
+#controls {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#controls button {
+  background-color: #333;
+  color: #e0e0e0;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+#controls button:hover {
+  background-color: #444;
+}
+
+/* Backups Management Section */
+#backupsSection {
+  background-color: #1e1e1e;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 0 20px 20px 20px;
+}
+
+#backupsSection h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#backupControls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#backupControls label {
+  margin-right: 10px;
+  color: #e0e0e0;
+}
+
+#backupList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#backupList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+#backupList li button {
+  background-color: #555;
+  color: #e0e0e0;
+  border: none;
+  padding: 5px 10px;
+  margin-left: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#backupList li button:hover {
+  background-color: #666;
+}
+
+#resetCsvBtn, #deleteSelectedBtn {
+  background-color: #c73636 !important;
+  color: #e0e0e0;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 8px;
+}

@@ -34,18 +34,29 @@ const darkChartOptions = {
     }
 };
 
+// Global arrays to accumulate data
+let tempLabels = [];
+let tempDataArray = [];
+let pressureLabels = [];
+let pressureDataArray = [];
+let altitudeLabels = [];
+let altitudeDataArray = [];
+let velocityLabels = [];
+let velocityDataArray = [];
+
 // Create Temperature Chart
 const tempChartElement = document.getElementById('temperature').getContext('2d');
 const tempChart = new Chart(tempChartElement, {
     type: 'line',
     data: {
-        labels: [],
+        labels: tempLabels,
         datasets: [{
             label: 'Temperature',
-            data: [],
+            data: tempDataArray,
             backgroundColor: 'rgba(237, 125, 49, 0.5)',
             borderColor: 'rgba(237, 125, 49, 1)',
             borderWidth: 1,
+            pointRadius: 0
         }]
     },
     options: darkChartOptions,
@@ -57,13 +68,14 @@ const pressureChartElement = document.getElementById('pressure').getContext('2d'
 const pressureChart = new Chart(pressureChartElement, {
     type: 'line',
     data: {
-        labels: [],
+        labels: pressureLabels,
         datasets: [{
             label: 'Pressure',
-            data: [],
+            data: pressureDataArray,
             backgroundColor: 'rgba(112, 173, 71, 0.5)',
             borderColor: 'rgba(112, 173, 71, 1)',
             borderWidth: 1,
+            pointRadius: 0
         }]
     },
     options: darkChartOptions,
@@ -75,13 +87,14 @@ const altitudeChartElement = document.getElementById('altitude').getContext('2d'
 const altitudeChart = new Chart(altitudeChartElement, {
     type: 'line',
     data: {
-        labels: [],
+        labels: altitudeLabels,
         datasets: [{
             label: 'Altitude',
-            data: [],
+            data: altitudeDataArray,
             backgroundColor: 'rgba(106, 90, 205, 0.5)',
             borderColor: 'rgba(106, 90, 205, 1)',
             borderWidth: 1,
+            pointRadius: 0
         }]
     },
     options: darkChartOptions,
@@ -93,13 +106,14 @@ const velocityChartElement = document.getElementById('velocity').getContext('2d'
 const velocityChart = new Chart(velocityChartElement, {
     type: 'line',
     data: {
-        labels: [],
+        labels: velocityLabels,
         datasets: [{
             label: 'Velocity',
-            data: [],
+            data: velocityDataArray,
             backgroundColor: 'rgba(220, 20, 60, 0.5)',
             borderColor: 'rgba(220, 20, 60, 1)',
             borderWidth: 1,
+            pointRadius: 0
         }]
     },
     options: darkChartOptions,
@@ -176,7 +190,7 @@ function downloadChart(chart, fileName) {
     // Save original sizes
     var originalSize = { width: chart.width, height: chart.height };
 
-    // Temporarily resize chart for download (e.g., 1920x1080 for a 16:9 aspect ratio)
+    // Temporarily resize chart for download
     chart.resize(1920, 1080);
     chart.update({ duration: 0 }, true);
 
@@ -212,41 +226,42 @@ ws.onclose = function(event) {
 
 ws.onmessage = (event) => {
     // Parse incoming CSV data
-    const csvData = parseCSV(event.data);
-    
-    // Extract time labels from the first column
-    const time = csvData.map(row => row[0]);
-    
-    // Update Temperature Chart (2nd column)
-    const tempData = csvData.map(row => parseFloat(row[1]));
-    updateChartData(tempChart, time, tempData);
-    
-    // Update Pressure Chart (3rd column)
-    const pressureData = csvData.map(row => parseFloat(row[2]));
-    updateChartData(pressureChart, time, pressureData);
-    
-    // Update Altitude Chart (4th column)
-    const altitudeData = csvData.map(row => parseFloat(row[3]));
-    updateChartData(altitudeChart, time, altitudeData);
-    
-    // Calculate Velocity based on Altitude and Time differences
-    function calculateVelocity(data) {
-        const altData = data.map(row => parseFloat(row[3]));
-        const timeData = data.map(row => parseFloat(row[0]));
-        let velocities = [];
-        for (let i = 1; i < timeData.length; i++) {
-            let deltaTime = timeData[i] - timeData[i - 1];
-            let deltaAltitude = altData[i] - altData[i - 1];
-            velocities.push(deltaTime !== 0 ? deltaAltitude / deltaTime : 0);
-        }
-        return velocities;
+    const newRows = parseCSV(event.data);
+    if (newRows.length === 0) return;
+
+    // Append new data to global arrays
+    newRows.forEach(row => {
+        const time = row[0];
+        tempLabels.push(time);
+        tempDataArray.push(parseFloat(row[1]));
+        
+        pressureLabels.push(time);
+        pressureDataArray.push(parseFloat(row[2]));
+        
+        altitudeLabels.push(time);
+        altitudeDataArray.push(parseFloat(row[3]));
+    });
+
+    // Recalculate velocity from entire accumulated altitude data
+    velocityLabels = [];
+    velocityDataArray = [];
+    for (let i = 1; i < altitudeLabels.length; i++) {
+        const deltaTime = parseFloat(altitudeLabels[i]) - parseFloat(altitudeLabels[i - 1]);
+        const deltaAltitude = altitudeDataArray[i] - altitudeDataArray[i - 1];
+        velocityLabels.push(altitudeLabels[i]);
+        velocityDataArray.push(deltaTime !== 0 ? deltaAltitude / deltaTime : 0);
     }
-    const velocities = calculateVelocity(csvData);
-    // Velocity chart uses labels starting from the second time entry
-    updateChartData(velocityChart, time.slice(1), velocities);
-    
-    // Update map marker if latitude (5th column) and longitude (6th column) are provided
-    const latestRow = csvData[csvData.length - 1];
+
+    // Update charts with accumulated data
+    tempChart.update();
+    pressureChart.update();
+    altitudeChart.update();
+    velocityChart.data.labels = velocityLabels;
+    velocityChart.data.datasets[0].data = velocityDataArray;
+    velocityChart.update();
+
+    // Update map marker using latest data
+    const latestRow = newRows[newRows.length - 1];
     const latitude = parseFloat(latestRow[4]);
     const longitude = parseFloat(latestRow[5]);
     if (!isNaN(latitude) && !isNaN(longitude)) {
@@ -259,20 +274,14 @@ ws.onmessage = (event) => {
     }
 };
 
-// Parse CSV data (removes header row)
+// Parse CSV data (removes header row if present)
 function parseCSV(csvString) {
     const rows = csvString.trim().split(/\r?\n/);
-    rows.shift(); // Remove header
+    // Remove header if present (checks for "Time" in first row)
+    if (rows.length > 0 && rows[0].includes("Time")) {
+        rows.shift();
+    }
     return rows.map(row => row.split(',').map(cell => cell.trim()));
-}
-
-// Update chart data and refresh the chart
-function updateChartData(chart, labels, data) {
-    chart.data.labels = labels;
-    chart.data.datasets.forEach(dataset => {
-        dataset.data = data;
-    });
-    chart.update();
 }
 
 /***************************************
