@@ -15,24 +15,55 @@ Last year, I coded a dashboard for a cansat competition, it had a python process
     <td><img src="images/gyro.png" alt="Status" width="400"/></td>
     <td><img src="images/graphs.png" alt="Graphs" width="400"/></td>
   </tr>
+    <tr>
+    <td colspan="2" align="center"><img src="images/backups.png" alt="Gyro" width="400"/></td>
+  </tr>
 </table>
 
 
 ## Project Structure
 
 ```
-cansat-dashboard/
-├── package.json          # Lists project dependencies and start script
-├── server.js             # Main entry point; sets up Express, WebSocket, and starts serial reading
-├── lib/
-│   ├── serialReader.js   # Handles serial port reading, data parsing, CSV logging, MySQL insertion, KML updates, and backups
-│   ├── mysqlHandler.js   # Creates a MySQL connection pool, renames old tables, creates a new table, and inserts data
-│   ├── csvHandler.js     # Creates the CSV file with headers, appends new rows, and can reset the CSV file
-│   ├── kmlHandler.js     # Creates the initial KML file and updates it with new coordinates and LookAt settings
-│   └── backupHandler.js  # Manages backup creation and updating for CSV and KML files
-└── public/
-    ├── index.html        # Frontend HTML page for displaying data
-    └── client.js         # Client-side JavaScript that connects to the WebSocket server and updates the page in real time
+# Project Structure: CANSAT-V2
+
+CANSAT-V2/
+├── images/                     # Stores image assets used in the project
+├── lib/                        # Backend modules for data handling
+│   ├── backupHandler.js        # Manages backup processes
+│   ├── csvHandler.js           # Handles CSV file operations
+│   ├── kmlHandler.js           # Manages KML file updates for GPS tracking
+│   ├── mysqlHandler.js         # MySQL database handler (current version)
+│   └── serialReader.js         # Reads data from the serial port
+├── node_modules/               # Node.js dependencies
+├── public/                     # Frontend static files
+│   ├── css/                    # Stylesheets for UI design
+│   │   ├── charts.css          # Styles for charts and graphs
+│   │   ├── console.css         # Styles for the console interface
+│   │   ├── gyro.css            # Styles for the gyroscope page
+│   │   ├── nav.css             # Styles for navigation/sidebar
+│   │   ├── status.css          # Styles for the system status page
+│   │   └── style.css           # General styles for the project
+│   └── js/                     # JavaScript files for frontend interactivity
+│       ├── charts.js           # Handles chart updates and data visualization
+│       ├── console.js          # Manages console data display
+│       ├── gyro.js             # Handles gyroscope data visualization
+│       ├── script.js           # General JavaScript logic for the project
+│       └── status.js           # Manages system status updates
+├── models/                     # 3D model files for visualization
+│   ├── demo.obj                # 3D model of the CanSat (OBJ format)
+│   └── obj.mtl                 # Material file for the 3D model
+├── charts.html                 # Data visualization with graphs
+├── console.html                # Serial console interface
+├── gyro.html                   # Gyroscope data display
+├── index.html                  # Main dashboard/homepage
+├── status.html                 # System status overview
+├── live_track.kml              # Real-time GPS tracking data
+├── package.json                # Node.js project metadata and dependencies
+├── package-lock.json           # Locks specific versions of installed dependencies
+├── README.md                   # Project documentation (this file)
+├── server.js                   # Node.js server script for APIs and WebSockets
+└── sheet.csv                   # Logs sensor data from the hardware
+
 ```
 
 ## ⚙️ How It Works
