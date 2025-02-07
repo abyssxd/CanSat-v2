@@ -1,6 +1,6 @@
 # CanSat-v2 Dashboard
 
-Last year, I coded a dashboard for a cansat competition, it had a python processing script and a node.js dashboard. This project combines those two into a single Node.js application. It reads sensor data from a serial port, processes and logs it to CSV and MySQL, creates and updates a KML file for mapping, and broadcasts updates to a web dashboard via WebSocket.
+Last year, I coded a dashboard for a cansat competition, it had a python processing script and a node.js dashboard. This project combines those two into a single Node.js application. It reads sensor data from a serial port, processes and logs it to CSV, creates and updates a KML file for mapping, and broadcasts updates to a web dashboard via WebSocket.
 
 <table>
   <tr>
