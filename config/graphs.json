@@ -1,1 +1,23 @@
+{
+  "graphs": [
+    {
+      "id": "temperature",
+      "label": "Temperature",
+      "enabled": true,
+      "color": "rgba(237, 125, 49, 1)"
+    },
+    {
+      "id": "pressure",
+      "label": "Pressure",
+      "enabled": true,
+      "color": "rgba(112, 173, 71, 1)"
+    },
+    {
+      "id": "velocity",
+      "label": "Velocity",
+      "enabled": false, 
+      "color": "rgba(220, 20, 60, 1)"
+    }
+  ]
+}
 
