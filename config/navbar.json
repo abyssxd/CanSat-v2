@@ -1,0 +1,8 @@
+{
+  "items": [
+    { "name": "Console", "link": "console.html", "visible": true },
+    { "name": "Overview", "link": "index.html", "visible": true },
+    { "name": "Graphs", "link": "charts.html", "visible": true },
+    { "name": "Gyroscope", "link": "gyro.html", "visible": false }
+  ]
+}
