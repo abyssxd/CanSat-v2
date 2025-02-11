@@ -1,0 +1,4 @@
+{
+  "backupInterval": 300, 
+  "filesToBackup": ["sheet.csv", "live_track.kml"],
+}
