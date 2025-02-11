@@ -1,0 +1,7 @@
+{
+  "statusCards": [
+    { "name": "GPS Status", "enabled": true, "icon": "gps.png" },
+    { "name": "Gyroscope Status", "enabled": true, "icon": "gyro.png" },
+    { "name": "Battery Level", "enabled": false } // Can be disabled
+  ]
+}
