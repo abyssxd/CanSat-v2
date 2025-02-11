@@ -1,0 +1,5 @@
+{
+  "defaultView": { "lat": 0, "lng": 0, "zoom": 5 },
+  "tileLayer": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  "enableUserLocation": true
+}
