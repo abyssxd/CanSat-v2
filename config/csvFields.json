@@ -1,0 +1,9 @@
+{
+  "fields": [
+    { "name": "Time", "enabled": true },
+    { "name": "Temperature", "enabled": true },
+    { "name": "Pressure", "enabled": true },
+    { "name": "Altitude", "enabled": true },
+    { "name": "Gyro_X", "enabled": false }  // Can disable unused data
+  ]
+}
