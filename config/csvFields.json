@@ -4,6 +4,19 @@
     { "name": "Temperature", "enabled": true },
     { "name": "Pressure", "enabled": true },
     { "name": "Altitude", "enabled": true },
-    { "name": "Gyro_X", "enabled": false }  // Can disable unused data
+    { "name": "Latitude", "enabled": true },
+    { "name": "Longitude", "enabled": true },
+    { "name": "gps_altitude", "enabled": true },
+    { "name": "gps_sats", "enabled": true },
+    { "name": "gyro_x", "enabled": true },
+    { "name": "gyro_y", "enabled": true },
+    { "name": "gyro_z", "enabled": true },
+    { "name": "bmp_status", "enabled": true },
+    { "name": "gps_status", "enabled": true },
+    { "name": "gyro_status", "enabled": true },
+    { "name": "apc_status", "enabled": true },
+    { "name": "servo_status", "enabled": true },
+    { "name": "servo_rotation", "enabled": true },
+    { "name": "sd_status", "enabled": true }
   ]
 }
