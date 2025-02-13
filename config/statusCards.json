@@ -1,7 +1,95 @@
 {
   "statusCards": [
-    { "name": "GPS Status", "enabled": true, "icon": "gps.png" },
-    { "name": "Gyroscope Status", "enabled": true, "icon": "gyro.png" },
-    { "name": "Battery Level", "enabled": false } // Can be disabled
+    {
+      "name": "System Status",
+      "id": "sysStatus",
+      "enabled": true,
+      "statusLogic": ["bmp_status", "gps_status", "gyro_status", "apc_status", "servo_status", "sd_status"],
+      "statusColors": {
+        "Online": "#01e774",
+        "Partially Online": "#ffd85c",
+        "Offline": "#e24a4a"
+      }
+    },
+    {
+      "name": "Seeds Deployed",
+      "id": "seedsStatus",
+      "enabled": true,
+      "statusField": "seeds_deployed",
+      "statusValues": {
+        "1": { "text": "Deployed", "color": "#01e774" },
+        "0": { "text": "Undeployed", "color": "#e24a4a" }
+      }
+    },
+    {
+      "name": "BMP-280 Sensor",
+      "id": "bmp",
+      "enabled": true,
+      "icon": "bmp.png",
+      "statusField": "bmp_status",
+      "statusValues": {
+        "1": { "text": "Online", "color": "#01e774" },
+        "0": { "text": "Offline", "color": "#e24a4a" }
+      },
+      "details": ["Temperature", "Pressure", "Altitude"]
+    },
+    {
+      "name": "GPS Module",
+      "id": "gps",
+      "enabled": true,
+      "icon": "gps.png",
+      "statusField": "gps_status",
+      "statusValues": {
+        "1": { "text": "Online", "color": "#01e774" },
+        "0": { "text": "Offline", "color": "#e24a4a" }
+      },
+      "details": ["Latitude", "Longitude", "gps_altitude", "gps_sats"]
+    },
+    {
+      "name": "Gyroscope Sensor",
+      "id": "gyro",
+      "enabled": true,
+      "icon": "gyro.png",
+      "statusField": "gyro_status",
+      "statusValues": {
+        "1": { "text": "Online", "color": "#01e774" },
+        "0": { "text": "Offline", "color": "#e24a4a" }
+      },
+      "details": ["gyro_x", "gyro_y", "gyro_z"]
+    },
+    {
+      "name": "APC220 Module",
+      "id": "apc",
+      "enabled": true,
+      "icon": "apc.png",
+      "statusField": "apc_status",
+      "statusValues": {
+        "1": { "text": "Online", "color": "#01e774" },
+        "0": { "text": "Offline", "color": "#e24a4a" }
+      }
+    },
+    {
+      "name": "Servo Motor",
+      "id": "servo",
+      "enabled": true,
+      "icon": "servo.png",
+      "statusField": "servo_status",
+      "statusValues": {
+        "1": { "text": "Online", "color": "#01e774" },
+        "0": { "text": "Offline", "color": "#e24a4a" }
+      },
+      "details": ["servo_rotation"]
+    },
+    {
+      "name": "SD Card",
+      "id": "sd",
+      "enabled": true,
+      "icon": "sd.png",
+      "statusField": "sd_status",
+      "statusValues": {
+        "1": { "text": "Online", "color": "#01e774" },
+        "0": { "text": "Offline", "color": "#e24a4a" }
+      }
+    }
   ]
 }
