@@ -2,7 +2,45 @@ import * as THREE from 'https://unpkg.com/three@0.127.0/build/three.module.js';
 import { OBJLoader } from 'https://unpkg.com/three@0.127.0/examples/jsm/loaders/OBJLoader.js';
 import { MTLLoader } from 'https://unpkg.com/three@0.127.0/examples/jsm/loaders/MTLLoader.js';
 
+// Load Configurations
+async function loadConfig(path) {
+    try {
+        const response = await fetch(path);
+        return await response.json();
+    } catch (error) {
+        console.error(`Error loading ${path}:`, error);
+        return null;
+    }
+}
+
 async function initCanSatVisualization() {
+    const [gyroConfig, csvFields] = await Promise.all([
+        loadConfig('../config/gyroscopeModel.json'),
+        loadConfig('../config/csvFields.json')
+    ]);
+
+    if (!gyroConfig || !gyroConfig.enabled) {
+        console.warn("Gyroscope model is disabled in configuration.");
+        return;
+    }
+
+    if (!csvFields || !csvFields.fields) {
+        console.error("Error: CSV fields configuration missing or invalid.");
+        return;
+    }
+
+    // Find column indexes for gyroscope values dynamically
+    const gyroIndexes = {
+        x: csvFields.fields.findIndex(f => f.name.toLowerCase() === 'gyro_x'),
+        y: csvFields.fields.findIndex(f => f.name.toLowerCase() === 'gyro_y'),
+        z: csvFields.fields.findIndex(f => f.name.toLowerCase() === 'gyro_z')
+    };
+
+    if (gyroIndexes.x === -1 || gyroIndexes.y === -1 || gyroIndexes.z === -1) {
+        console.error("Gyroscope fields not found in CSV configuration.");
+        return;
+    }
+
     const container = document.getElementById('cansatContainer');
     if (!container) {
         console.error("cansatContainer not found in DOM");
@@ -19,8 +57,7 @@ async function initCanSatVisualization() {
     );
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(container.offsetWidth, container.offsetHeight);
-    // Set clear color to a dark tone for the dark theme
-    renderer.setClearColor(0x121212);
+    renderer.setClearColor(0x121212); // Dark theme
     container.appendChild(renderer.domElement);
 
     // Position the camera
@@ -36,13 +73,13 @@ async function initCanSatVisualization() {
 
     let cansatModel;
 
-    // Load the model using MTL and OBJ loaders
+    // Load the model using MTL and OBJ loaders from config
     const mtlLoader = new MTLLoader();
-    mtlLoader.load('models/obj.mtl', function (materials) {
+    mtlLoader.load(gyroConfig.materialPath, function (materials) {
         materials.preload();
         const objLoader = new OBJLoader();
         objLoader.setMaterials(materials);
-        objLoader.load('models/demo.obj', function (obj) {
+        objLoader.load(gyroConfig.modelPath, function (obj) {
             cansatModel = obj;
             scene.add(cansatModel);
         });
@@ -71,21 +108,24 @@ async function initCanSatVisualization() {
         if (csvData.length === 0) return;
         const latestData = csvData[csvData.length - 1];
 
-        // Update targetQuaternion using gyro data (assumed to be in columns 9,10,11: indexes 8,9,10)
+        // Ensure valid gyro data exists
+        if (!latestData[gyroIndexes.x] || !latestData[gyroIndexes.y] || !latestData[gyroIndexes.z]) {
+            console.warn("Invalid gyroscope data received.");
+            return;
+        }
+
+        // Update targetQuaternion using gyro data
         targetQuaternion.setFromEuler(new THREE.Euler(
-            THREE.MathUtils.degToRad(Number(latestData[10])),
-            THREE.MathUtils.degToRad(Number(latestData[8])),
-            THREE.MathUtils.degToRad(Number(latestData[9])),
+            THREE.MathUtils.degToRad(Number(latestData[gyroIndexes.z])),
+            THREE.MathUtils.degToRad(Number(latestData[gyroIndexes.x])),
+            THREE.MathUtils.degToRad(Number(latestData[gyroIndexes.y])),
             'ZXY'
         ));
 
-        // Update HTML elements (if they exist) with the gyro values
-        const gyroXElem = document.getElementById("gyroX");
-        const gyroYElem = document.getElementById("gyroY");
-        const gyroZElem = document.getElementById("gyroZ");
-        if (gyroXElem) gyroXElem.innerHTML = "X: " + latestData[8];
-        if (gyroYElem) gyroYElem.innerHTML = "Y: " + latestData[9];
-        if (gyroZElem) gyroZElem.innerHTML = "Z: " + latestData[10];
+        // Update HTML elements with gyro values
+        document.getElementById("gyroX")?.textContent = "X: " + latestData[gyroIndexes.x];
+        document.getElementById("gyroY")?.textContent = "Y: " + latestData[gyroIndexes.y];
+        document.getElementById("gyroZ")?.textContent = "Z: " + latestData[gyroIndexes.z];
 
         console.log("Target rotation updated");
     };
@@ -94,7 +134,6 @@ async function initCanSatVisualization() {
     function animate() {
         requestAnimationFrame(animate);
         if (cansatModel) {
-            // Slerp for smooth interpolation
             cansatModel.quaternion.slerp(targetQuaternion, 0.05);
         }
         renderer.render(scene, camera);
@@ -109,8 +148,7 @@ async function initCanSatVisualization() {
     });
 }
 
-// Create a dedicated WebSocket connection for visualization updates inside this module
-
+// Initialize the visualization
 initCanSatVisualization().catch(error => console.error(error));
 
 // CSV parsing function (compatible with both Windows and Linux)
