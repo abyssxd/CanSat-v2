@@ -4,20 +4,33 @@
       "id": "temperature",
       "label": "Temperature",
       "enabled": true,
-      "color": "rgba(237, 125, 49, 1)"
+      "color": "rgba(237, 125, 49, 1)",
+      "backgroundColor": "rgba(237, 125, 49, 0.5)",
+      "pointRadius": 0
     },
     {
       "id": "pressure",
       "label": "Pressure",
       "enabled": true,
-      "color": "rgba(112, 173, 71, 1)"
+      "color": "rgba(112, 173, 71, 1)",
+      "backgroundColor": "rgba(112, 173, 71, 0.5)",
+      "pointRadius": 0
+    },
+    {
+      "id": "altitude",
+      "label": "Altitude",
+      "enabled": true,
+      "color": "rgba(106, 90, 205, 1)",
+      "backgroundColor": "rgba(106, 90, 205, 0.5)",
+      "pointRadius": 0
     },
     {
       "id": "velocity",
       "label": "Velocity",
-      "enabled": false, 
-      "color": "rgba(220, 20, 60, 1)"
+      "enabled": true,
+      "color": "rgba(220, 20, 60, 1)",
+      "backgroundColor": "rgba(220, 20, 60, 0.5)",
+      "pointRadius": 0
     }
   ]
 }
-
