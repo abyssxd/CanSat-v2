@@ -1,7 +1,0 @@
-{
-  "endpoints": {
-    "data": "ws://localhost:3000/data",
-    "console": "ws://localhost:3000/console",
-    "visualization": "ws://localhost:3000/visualization"
-  }
-}
