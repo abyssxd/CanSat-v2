@@ -9,11 +9,13 @@ const { resetCSV } = require('./lib/csvHandler');
 const backupFolder = path.join(__dirname, 'backup');
 const csvFilePath = path.join(__dirname, 'sheet.csv');
 const kmlFilePath = path.join(__dirname, 'live_track.kml');
+const configFolder = path.join(__dirname, 'config');
+
 const { createCSVIfNotExists } = require('./lib/csvHandler');
 
 const app = express();
 
-// To support JSON in POST requests (if needed)
+// To support JSON in POST requests (for settings updates)
 app.use(express.json());
 
 // Serve static files from the "public" folder
@@ -59,7 +61,6 @@ app.get('/backups', (req, res) => {
     // Create an array of backup objects.
     // Assumes filenames are like TIMESTAMP_sheet.csv or TIMESTAMP_live_track.kml.
     const backups = files.map(file => {
-      // For simplicity, extract timestamp as the part before the first underscore.
       const timestamp = file.split('_')[0];
       return { filename: file, timestamp };
     });
@@ -99,6 +100,30 @@ app.delete('/delete/backup', (req, res) => {
   });
 });
 
+// ----- Endpoints for Updating JSON Configuration Files -----
+
+app.post('/update-json', (req, res) => {
+  const { file, data } = req.body;
+
+  if (!file || !data) {
+    return res.status(400).json({ error: "Missing file or data in request." });
+  }
+
+  const filePath = path.join(configFolder, path.basename(file));
+
+  // Ensure the file exists before updating
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: "Configuration file not found." });
+  }
+
+  fs.writeFile(filePath, JSON.stringify(data, null, 2), (err) => {
+    if (err) {
+      return res.status(500).json({ error: "Error writing to configuration file." });
+    }
+    res.json({ message: `${file} updated successfully.` });
+  });
+});
+
 // ----- Endpoints for WebSocket Data Broadcasting -----
 
 // Create HTTP server and attach WebSocket server
@@ -123,7 +148,6 @@ wss.on('connection', (ws) => {
     }
   });
 });
-
 
 // Ensure CSV exists before starting the server
 createCSVIfNotExists();
@@ -151,15 +175,13 @@ fs.watch(csvFilePath, (eventType, filename) => {
           previousSize = newSize;
         });
       } else {
-        // File was reset; update previousSize accordingly
         previousSize = newSize;
       }
     });
   }
 });
 
-
-// Start the serial reading process (this handles CSV, MySQL, KML, backups, etc.)
+// Start the serial reading process
 startSerialReading();
 
 // Start the HTTP server on port 3000
