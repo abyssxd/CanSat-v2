@@ -1,148 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <title>Vila2Sat Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- External Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" type="text/css" href="css/status.css">
     <link rel="stylesheet" type="text/css" href="css/nav.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  </head>
-  <body>
+
+    <!-- Load Status and Navbar JS -->
+    <script src="js/status.js" defer></script>
+    <script src="js/navbar.js" defer></script>
+</head>
+<body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-      <button class="close-btn" onclick="toggleSidebar()">×</button>
-      <h2>Vila2Sat</h2>
-      <ul>
-        <li><a href="console.html">Console</a></li>
-        <li><a href="status.html">System Status</a></li>
-        <li><a href="index.html">Overview</a></li>
-        <li><a href="gyro.html">Gyroscope</a></li>
-        <li><a href="charts.html">Graphs</a></li>
-        <li><a href="https://github.com/abyssxd/CanSat-v2" target="_blank">GitHub</a></li>
-      </ul>
+        <button class="close-btn" onclick="toggleSidebar()">×</button>
+        <h2>Vila2Sat</h2>
+        <ul id="sidebarItems">
+            <!-- Dynamic Sidebar Items from navbar.json -->
+        </ul>
     </div>
 
-    <!-- Sidebar Toggle Button (Visible on Mobile) -->
+    <!-- Sidebar Toggle Button -->
     <button class="open-btn" onclick="toggleSidebar()">☰</button>
 
     <!-- Main Content -->
     <div class="content">
-      <div class="title">
-        <h3 class="child">System Status</h3>
-      </div>
-      <hr>
-      <div class="container">
-        <div class="blockContainer">
-          <div class="specialBlock" id="sysBlock">
-            <div class="subSpecialBlock">
-              <h3>System: </h3>
-              <h4 class="mainStatusblock" id="sysStatusText">Offline</h4>
-            </div>
-            <div class="subSpecialBlock">
-              <h3>Seeds: </h3>
-              <h4 class="mainStatusblock" id="seedsStatusText">Undeployed</h4>
-            </div>
-          </div>
+        <div class="title">
+            <h3 class="child">System Status</h3>
         </div>
-      </div>
-      <div class="title">
-        <h3 class="child">Components Status</h3>
-      </div>
-      <hr>
-      <div class="container">
-        <div class="blockContainer">
-          <div class="block" id="bmpBlock">
-            <div class="blockTitle">
-              <h3 id="bmpMainStatusText">BMP-280</h3>
-              <h4 class="statusblock" id="bmpStatusText">Offline</h4>
+        <hr>
+
+        <div class="container">
+            <div class="blockContainer" id="statusBlocks">
+                <!-- Status Cards will be dynamically inserted here -->
             </div>
-            <div class="blockBody">
-              <hr>
-              <h4 id="bmpTemp">Temperature: --</h4>
-              <h4 id="bmpPressure">Pressure: --</h4>
-              <h4 id="bmpAltitude">Altitude: --</h4>
-            </div>
-          </div>
-          <div class="block" id="gpsBlock">
-            <div class="blockTitle">
-              <h3 id="gpsMainStatusText">GPS</h3>
-              <h4 class="statusblock" id="gpsStatusText">Offline</h4>
-            </div>
-            <div class="blockBody">
-              <hr>
-              <h4 id="gpsLat">Latitude: --</h4>
-              <h4 id="gpsLong">Longitude: --</h4>
-              <h4 id="gpsAltitude">Altitude: --</h4>
-            </div>
-            <div class="blockFooter automargin">
-              <hr>
-              <h4 id="gpsSats">Satellites: --</h4>
-            </div>
-          </div>
-          <div class="block" id="gyroBlock">
-            <div class="blockTitle">
-              <h3 id="gyroMainStatusText">GYRO</h3>
-              <h4 class="statusblock" id="gyroStatusText">Offline</h4>
-            </div>
-            <div class="blockBody">
-              <hr>
-              <h4 id="gyro_x">Gyro X: --</h4>
-              <h4 id="gyro_y">Gyro Y: --</h4>
-              <h4 id="gyro_z">Gyro Z: --</h4>
-            </div>
-            <div class="blockFooter automargin">
-              <hr>
-              <h4 id="gyro_temp">Temperature: --</h4>
-            </div>
-          </div>
-          <div class="block" id="apcBlock">
-            <div class="blockTitle">
-              <h3 id="apcMainStatusText">APC220</h3>
-              <h4 class="statusblock" id="apcStatusText">Offline</h4>
-            </div>
-            <div class="blockBody">
-              <hr>
-              <h4 id="apcAdditionalInfo">No Additional Info</h4>
-            </div>
-          </div>
-          <div class="block" id="servoBlock">
-            <div class="blockTitle">
-              <h3 id="servoMainStatusText">Servo</h3>
-              <h4 class="statusblock" id="servoStatusText">Offline</h4>
-            </div>
-            <div class="blockBody">
-              <hr>
-              <h4 id="servoRotation">Rotation: --</h4>
-            </div>
-          </div>
-          <div class="block" id="sdBlock">
-            <div class="blockTitle">
-              <h3 id="sdMainStatusText">SD Card</h3>
-              <h4 class="statusblock" id="sdStatusText">Offline</h4>
-            </div>
-            <div class="blockBody">
-              <hr>
-              <h4 id="sdAdditionalInfo">No Additional Info</h4>
-            </div>
-          </div>
         </div>
+
         <div class="errorContainer">
-          <div class="error" id="errorBlock">
-            <p id="sysText">All components are offline, system status will be shown as offline!</p>
-          </div>
+            <div class="error" id="errorBlock">
+                <p id="sysText">All components are offline, system status will be shown as offline!</p>
+            </div>
         </div>
-      </div>
     </div>
-    <script src="js/status.js"></script>
+
     <!-- Sidebar Toggle Script -->
     <script>
-      function toggleSidebar() {
-        const sidebar = document.getElementById("sidebar");
-        sidebar.classList.toggle("active");
-      }
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("active");
+        }
     </script>
-  </body>
+</body>
 </html>
