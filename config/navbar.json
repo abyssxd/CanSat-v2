@@ -3,6 +3,9 @@
     { "name": "Console", "link": "console.html", "visible": true },
     { "name": "Overview", "link": "index.html", "visible": true },
     { "name": "Graphs", "link": "charts.html", "visible": true },
-    { "name": "Gyroscope", "link": "gyro.html", "visible": false }
+    { "name": "Gyroscope", "link": "gyro.html", "visible": true },
+    { "name": "System Status", "link": "status.html", "visible": true },
+    { "name": "Settings", "link": "settings.html", "visible": true },
+    { "name": "GitHub Repository", "link": "https://github.com/abyssxd/CanSat-v2", "visible": true, "external": true }
   ]
 }
