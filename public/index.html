@@ -14,20 +14,14 @@
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <link rel="stylesheet" type="text/css" href="css/nav.css">
   <script src="js/script.js" defer></script>
+  <script src="js/map.js" defer></script>
 </head>
-<body>
+<body onload="loadDashboard()">
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
       <button class="close-btn" onclick="toggleSidebar()">×</button>
       <h2>Vila2Sat</h2>
-      <ul>
-          <li><a href="console.html">Console</a></li>
-          <li><a href="status.html">System Status</a></li>
-          <li><a href="index.html">Overview</a></li>
-          <li><a href="gyro.html">Gyroscope</a></li>
-          <li><a href="charts.html">Graphs</a></li>
-          <li><a href="https://github.com/abyssxd/CanSat-v2" target="_blank">GitHub</a></li>
-      </ul>
+      <ul id="sidebar-links"></ul>
   </div>
 
   <!-- Sidebar Toggle Button (Visible on Mobile) -->
@@ -37,27 +31,7 @@
   <div class="content">
       <h1>Vila2Sat Dashboard</h1>
 
-      <div class="chartContainer">
-          <div class="chart">
-              <canvas id="temperature"></canvas>
-              <a class="download temperature" id="temp_png">Download Chart Image</a>
-          </div>
-
-          <div class="chart">
-              <canvas id="pressure"></canvas>
-              <a class="download pressure" id="pressure_png">Download Chart Image</a>
-          </div>
-
-          <div class="chart">
-              <canvas id="altitude"></canvas>
-              <a class="download altitude" id="altitude_png">Download Chart Image</a>
-          </div>
-
-          <div class="chart">
-              <canvas id="velocity"></canvas>
-              <a class="download velocity" id="velocity_png">Download Chart Image</a>
-          </div>
-      </div>
+      <div id="chartContainer" class="chartContainer"></div>
 
       <h2>Map</h2>
       <div id="map"></div>
@@ -66,8 +40,55 @@
   <!-- Sidebar Toggle Script -->
   <script>
     function toggleSidebar() {
-      const sidebar = document.getElementById("sidebar");
-      sidebar.classList.toggle("active");
+      document.getElementById("sidebar").classList.toggle("active");
+    }
+  </script>
+
+  <!-- Load Dashboard Configurations -->
+  <script>
+    function loadDashboard() {
+      fetch("../config/navbar.json")
+        .then(response => response.json())
+        .then(navConfig => {
+          const sidebarLinks = document.getElementById("sidebar-links");
+          sidebarLinks.innerHTML = "";
+          navConfig.navbar.forEach(item => {
+            const li = document.createElement("li");
+            const a = document.createElement("a");
+            a.href = item.href;
+            a.textContent = item.label;
+            li.appendChild(a);
+            sidebarLinks.appendChild(li);
+          });
+        })
+        .catch(error => console.error("Error loading navbar config:", error));
+
+      fetch("../config/graphs.json")
+        .then(response => response.json())
+        .then(graphConfig => {
+          const chartContainer = document.getElementById("chartContainer");
+          chartContainer.innerHTML = "";
+
+          graphConfig.graphs.forEach(graph => {
+            if (graph.enabled) {
+              const chartDiv = document.createElement("div");
+              chartDiv.classList.add("chart");
+              
+              const canvas = document.createElement("canvas");
+              canvas.id = graph.id;
+
+              const downloadLink = document.createElement("a");
+              downloadLink.classList.add("download", graph.id);
+              downloadLink.id = graph.id + "_png";
+              downloadLink.textContent = "Download Chart Image";
+
+              chartDiv.appendChild(canvas);
+              chartDiv.appendChild(downloadLink);
+              chartContainer.appendChild(chartDiv);
+            }
+          });
+        })
+        .catch(error => console.error("Error loading graphs config:", error));
     }
   </script>
 </body>
