@@ -1,10 +1,22 @@
-// charts.js
+/***************************************
+ * 1. Load Configuration for Graphs
+ ***************************************/
+const configPath = "config/graphs.json";
+let graphsConfig = [];
+
+fetch(configPath)
+  .then(response => response.json())
+  .then(data => {
+    graphsConfig = data.graphs.filter(graph => graph.enabled);
+    initializeGraphs(graphsConfig);
+  })
+  .catch(error => console.error("Error loading graph config:", error));
 
 /***************************************
- * 1. Custom Plugin & Chart Creation
+ * 2. Custom Plugin & Chart Creation
  ***************************************/
 
-// Plugin to fill the entire canvas with a black background before drawing
+// Plugin to fill the entire canvas with a dark background before drawing
 var imageBG = {
     beforeDraw: function(chartInstance) {
         var ctx = chartInstance.ctx;
@@ -34,181 +46,38 @@ const darkChartOptions = {
     }
 };
 
-// Global arrays to accumulate data
-let tempLabels = [];
-let tempDataArray = [];
-let pressureLabels = [];
-let pressureDataArray = [];
-let altitudeLabels = [];
-let altitudeDataArray = [];
-let velocityLabels = [];
-let velocityDataArray = [];
+let charts = {}; // Store all charts dynamically
 
-// Create Temperature Chart
-const tempChartElement = document.getElementById('temperature').getContext('2d');
-const tempChart = new Chart(tempChartElement, {
-    type: 'line',
-    data: {
-        labels: tempLabels,
-        datasets: [{
-            label: 'Temperature',
-            data: tempDataArray,
-            backgroundColor: 'rgba(237, 125, 49, 0.5)',
-            borderColor: 'rgba(237, 125, 49, 1)',
-            borderWidth: 1,
-            pointRadius: 0
-        }]
-    },
-    options: darkChartOptions,
-    plugins: [imageBG]
-});
+function initializeGraphs(graphs) {
+    graphs.forEach(graph => {
+        const canvasElement = document.getElementById(graph.id);
+        if (!canvasElement) {
+            console.warn(`Canvas element for ${graph.id} not found!`);
+            return;
+        }
 
-// Create Pressure Chart
-const pressureChartElement = document.getElementById('pressure').getContext('2d');
-const pressureChart = new Chart(pressureChartElement, {
-    type: 'line',
-    data: {
-        labels: pressureLabels,
-        datasets: [{
-            label: 'Pressure',
-            data: pressureDataArray,
-            backgroundColor: 'rgba(112, 173, 71, 0.5)',
-            borderColor: 'rgba(112, 173, 71, 1)',
-            borderWidth: 1,
-            pointRadius: 0
-        }]
-    },
-    options: darkChartOptions,
-    plugins: [imageBG]
-});
-
-// Create Altitude Chart
-const altitudeChartElement = document.getElementById('altitude').getContext('2d');
-const altitudeChart = new Chart(altitudeChartElement, {
-    type: 'line',
-    data: {
-        labels: altitudeLabels,
-        datasets: [{
-            label: 'Altitude',
-            data: altitudeDataArray,
-            backgroundColor: 'rgba(106, 90, 205, 0.5)',
-            borderColor: 'rgba(106, 90, 205, 1)',
-            borderWidth: 1,
-            pointRadius: 0
-        }]
-    },
-    options: darkChartOptions,
-    plugins: [imageBG]
-});
-
-// Create Velocity Chart
-const velocityChartElement = document.getElementById('velocity').getContext('2d');
-const velocityChart = new Chart(velocityChartElement, {
-    type: 'line',
-    data: {
-        labels: velocityLabels,
-        datasets: [{
-            label: 'Velocity',
-            data: velocityDataArray,
-            backgroundColor: 'rgba(220, 20, 60, 0.5)',
-            borderColor: 'rgba(220, 20, 60, 1)',
-            borderWidth: 1,
-            pointRadius: 0
-        }]
-    },
-    options: darkChartOptions,
-    plugins: [imageBG]
-});
-
-/***************************************
- * 2. Display Control Functions
- ***************************************/
-function showTemp() {
-    document.getElementById("temperature").style.display = "block";
-    document.getElementById("pressure").style.display = "none";
-    document.getElementById("altitude").style.display = "none";
-    document.getElementById("velocity").style.display = "none";
-    document.getElementById("temp_png").style.display = "block";
-    document.getElementById("pressure_png").style.display = "none";
-    document.getElementById("altitude_png").style.display = "none";
-    document.getElementById("velocity_png").style.display = "none";
-    document.getElementById("tempchart").style.display= "block";
-    document.getElementById("preschart").style.display= "none";
-    document.getElementById("altichart").style.display= "none";
-    document.getElementById("velochart").style.display= "none";
-}
-
-function showPressure() {
-    document.getElementById("temperature").style.display = "none";
-    document.getElementById("pressure").style.display = "block";
-    document.getElementById("altitude").style.display = "none";
-    document.getElementById("velocity").style.display = "none";
-    document.getElementById("temp_png").style.display = "none";
-    document.getElementById("tempchart").style.display= "none";
-    document.getElementById("pressure_png").style.display = "block";
-    document.getElementById("altitude_png").style.display = "none";
-    document.getElementById("velocity_png").style.display = "none";
-    document.getElementById("preschart").style.display= "block";
-    document.getElementById("altichart").style.display= "none";
-    document.getElementById("velochart").style.display= "none";
-}
-
-function showAltitude() {
-    document.getElementById("temperature").style.display = "none";
-    document.getElementById("pressure").style.display = "none";
-    document.getElementById("altitude").style.display = "block";
-    document.getElementById("velocity").style.display = "none";
-    document.getElementById("temp_png").style.display = "none";
-    document.getElementById("tempchart").style.display= "none";
-    document.getElementById("pressure_png").style.display = "none";
-    document.getElementById("altitude_png").style.display = "block";
-    document.getElementById("velocity_png").style.display = "none";
-    document.getElementById("preschart").style.display= "none";
-    document.getElementById("altichart").style.display= "block";
-    document.getElementById("velochart").style.display= "none";
-}
-
-function showVelocity() {
-    document.getElementById("temperature").style.display = "none";
-    document.getElementById("pressure").style.display = "none";
-    document.getElementById("altitude").style.display = "none";
-    document.getElementById("velocity").style.display = "block";
-    document.getElementById("temp_png").style.display = "none";
-    document.getElementById("tempchart").style.display= "none";
-    document.getElementById("pressure_png").style.display = "none";
-    document.getElementById("altitude_png").style.display = "none";
-    document.getElementById("velocity_png").style.display = "block";
-    document.getElementById("preschart").style.display= "none";
-    document.getElementById("altichart").style.display= "none";
-    document.getElementById("velochart").style.display= "block";
+        const ctx = canvasElement.getContext('2d');
+        charts[graph.id] = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: graph.label,
+                    data: [],
+                    backgroundColor: graph.backgroundColor,
+                    borderColor: graph.color,
+                    borderWidth: 1,
+                    pointRadius: graph.pointRadius
+                }]
+            },
+            options: darkChartOptions,
+            plugins: [imageBG]
+        });
+    });
 }
 
 /***************************************
- * 3. Chart Download Function
- ***************************************/
-function downloadChart(chart, fileName) {
-    // Save original sizes
-    var originalSize = { width: chart.width, height: chart.height };
-
-    // Temporarily resize chart for download
-    chart.resize(1920, 1080);
-    chart.update({ duration: 0 }, true);
-
-    // Create a temporary link to trigger the download
-    var downloadLink = document.createElement('a');
-    downloadLink.href = chart.toBase64Image();
-    downloadLink.download = fileName;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-
-    // Restore original chart size
-    chart.resize(originalSize.width, originalSize.height);
-    chart.update({ duration: 0 });
-}
-
-/***************************************
- * 4. WebSocket and CSV Data Handling
+ * 3. WebSocket and CSV Data Handling
  ***************************************/
 const ws = new WebSocket('ws://localhost:3000');
 
@@ -225,59 +94,25 @@ ws.onclose = function(event) {
 };
 
 ws.onmessage = (event) => {
-    // Parse incoming CSV data
     const newRows = parseCSV(event.data);
     if (newRows.length === 0) return;
 
-    // Append new data to global arrays
     newRows.forEach(row => {
         const time = row[0];
-        tempLabels.push(time);
-        tempDataArray.push(parseFloat(row[1]));
-        
-        pressureLabels.push(time);
-        pressureDataArray.push(parseFloat(row[2]));
-        
-        altitudeLabels.push(time);
-        altitudeDataArray.push(parseFloat(row[3]));
+
+        graphsConfig.forEach(graph => {
+            if (charts[graph.id]) {
+                charts[graph.id].data.labels.push(time);
+                charts[graph.id].data.datasets[0].data.push(parseFloat(row[graphsConfig.indexOf(graph) + 1]));
+                charts[graph.id].update();
+            }
+        });
     });
-
-    // Recalculate velocity from entire accumulated altitude data
-    velocityLabels = [];
-    velocityDataArray = [];
-    for (let i = 1; i < altitudeLabels.length; i++) {
-        const deltaTime = parseFloat(altitudeLabels[i]) - parseFloat(altitudeLabels[i - 1]);
-        const deltaAltitude = altitudeDataArray[i] - altitudeDataArray[i - 1];
-        velocityLabels.push(altitudeLabels[i]);
-        velocityDataArray.push(deltaTime !== 0 ? deltaAltitude / deltaTime : 0);
-    }
-
-    // Update charts with accumulated data
-    tempChart.update();
-    pressureChart.update();
-    altitudeChart.update();
-    velocityChart.data.labels = velocityLabels;
-    velocityChart.data.datasets[0].data = velocityDataArray;
-    velocityChart.update();
-
-    // Update map marker using latest data
-    const latestRow = newRows[newRows.length - 1];
-    const latitude = parseFloat(latestRow[4]);
-    const longitude = parseFloat(latestRow[5]);
-    if (!isNaN(latitude) && !isNaN(longitude)) {
-        if (marker) {
-            marker.setLatLng([latitude, longitude]);
-        } else {
-            marker = L.marker([latitude, longitude]).addTo(map);
-        }
-        map.setView([latitude, longitude], 30);
-    }
 };
 
 // Parse CSV data (removes header row if present)
 function parseCSV(csvString) {
     const rows = csvString.trim().split(/\r?\n/);
-    // Remove header if present (checks for "Time" in first row)
     if (rows.length > 0 && rows[0].includes("Time")) {
         rows.shift();
     }
@@ -285,17 +120,37 @@ function parseCSV(csvString) {
 }
 
 /***************************************
+ * 4. Chart Download Function
+ ***************************************/
+function downloadChart(chartId, fileName) {
+    if (!charts[chartId]) {
+        console.error(`Chart ${chartId} not found!`);
+        return;
+    }
+
+    var chart = charts[chartId];
+    var originalSize = { width: chart.width, height: chart.height };
+
+    chart.resize(1920, 1080);
+    chart.update({ duration: 0 }, true);
+
+    var downloadLink = document.createElement('a');
+    downloadLink.href = chart.toBase64Image();
+    downloadLink.download = fileName;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+
+    chart.resize(originalSize.width, originalSize.height);
+    chart.update({ duration: 0 });
+}
+
+/***************************************
  * 5. Chart Download Event Listeners
  ***************************************/
-document.getElementById("temp_png").addEventListener('click', function() {
-    downloadChart(tempChart, 'tempChart.png');
-});
-document.getElementById("pressure_png").addEventListener('click', function() {
-    downloadChart(pressureChart, 'pressureChart.png');
-});
-document.getElementById("altitude_png").addEventListener('click', function() {
-    downloadChart(altitudeChart, 'altitudeChart.png');
-});
-document.getElementById("velocity_png").addEventListener('click', function() {
-    downloadChart(velocityChart, 'velocityChart.png');
+document.querySelectorAll(".download a").forEach(downloadBtn => {
+    downloadBtn.addEventListener('click', function() {
+        const chartId = this.id.replace("_png", "");
+        downloadChart(chartId, `${chartId}.png`);
+    });
 });
