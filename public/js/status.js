@@ -24,29 +24,31 @@ async function initializeStatusPage() {
         return;
     }
 
-    // Dynamically generate status blocks in the HTML
-    const statusContainer = document.querySelector(".blockContainer");
+    // Create Status Cards Dynamically
+    const statusContainer = document.getElementById("statusBlocks");
     statusContainer.innerHTML = "";
 
     statusConfig.statusCards.forEach(card => {
-        if (card.enabled) {
-            let iconHTML = card.icon ? `<img src="icons/${card.icon}" class="status-icon">` : "";
-            statusContainer.innerHTML += `
-                <div class="block" id="${card.id}Block">
-                    <div class="blockTitle">
-                        ${iconHTML}
-                        <h3 id="${card.id}MainStatusText">${card.name}</h3>
-                        <h4 class="statusblock" id="${card.id}StatusText">Offline</h4>
-                    </div>
-                    <div class="blockBody">
-                        <hr>
-                        <div id="${card.id}Details">
-                            <h4>No Data</h4>
-                        </div>
+        if (!card.enabled) return;
+
+        let iconHTML = card.icon ? `<img src="icons/${card.icon}" class="status-icon">` : "";
+        let detailsHTML = card.details ? card.details.map(field => `<h4 id="${card.id}_${field}">${field}: --</h4>`).join("") : "<h4>No Data</h4>";
+
+        statusContainer.innerHTML += `
+            <div class="block" id="${card.id}Block">
+                <div class="blockTitle">
+                    ${iconHTML}
+                    <h3 id="${card.id}MainStatusText">${card.name}</h3>
+                    <h4 class="statusblock" id="${card.id}StatusText">Offline</h4>
+                </div>
+                <div class="blockBody">
+                    <hr>
+                    <div id="${card.id}Details">
+                        ${detailsHTML}
                     </div>
                 </div>
-            `;
-        }
+            </div>
+        `;
     });
 
     const ws = new WebSocket('ws://localhost:3000/status');
@@ -98,7 +100,7 @@ async function initializeStatusPage() {
 
             if (card.details) {
                 let detailsHTML = card.details
-                    .map(field => `<h4>${field}: ${latestData[fieldIndexes[field]] || "--"}</h4>`)
+                    .map(field => `<h4 id="${card.id}_${field}">${field}: ${latestData[fieldIndexes[field]] || "--"}</h4>`)
                     .join("");
                 
                 document.getElementById(`${card.id}Details`).innerHTML = detailsHTML || "<h4>No Additional Info</h4>";
