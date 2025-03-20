@@ -14,20 +14,19 @@
   
   <!-- Console-specific Styles -->
   <link rel="stylesheet" type="text/css" href="css/console.css">
+  
+  <!-- Global JS file to load navbar -->
+  <script src="js/global.js" defer></script>
+  
+  <!-- Console-specific JS -->
+  <script src="js/console.js" defer></script>
 </head>
-<body>
+<body onload="initializeNavbar()">
   <!-- Sidebar (shared across pages) -->
   <div class="sidebar" id="sidebar">
       <button class="close-btn" onclick="toggleSidebar()">×</button>
       <h2>Vila2Sat</h2>
-      <ul>
-          <li><a href="console.html">Console</a></li>
-          <li><a href="status.html">System Status</a></li>
-          <li><a href="index.html">Overview</a></li>
-          <li><a href="gyro.html">Gyroscope</a></li>
-          <li><a href="charts.html">Graphs</a></li>
-          <li><a href="https://github.com/abyssxd/cansat_vila2sat" target="_blank">GitHub</a></li>
-      </ul>
+      <ul id="sidebar-links"></ul>
   </div>
   
   <!-- Sidebar Toggle Button (visible on mobile) -->
@@ -68,8 +67,5 @@
       sidebar.classList.toggle("active");
     }
   </script>
-  
-  <!-- External Console JS -->
-  <script src="js/console.js"></script>
 </body>
 </html>
