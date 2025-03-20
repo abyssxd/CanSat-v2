@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   // List of JSON config files to load (relative to the project root)
   const jsonFiles = [
-    "config/navbar.json",
     "config/graphs.json",
     "config/map.json",
     "config/backup.json",
@@ -29,6 +28,9 @@ document.addEventListener("DOMContentLoaded", async function () {
   function createForm(fileName, jsonData) {
     const section = document.createElement("div");
     section.className = "settings-section";
+    // Create an ID for the section for navigation purposes:
+    const sectionId = fileName.replace("config/", "").replace(".json", "") + "Section";
+    section.id = sectionId;
     const title = fileName.replace("config/", "").replace(".json", "").toUpperCase();
     section.innerHTML = `<h2>${title} Settings</h2>`;
 
@@ -123,24 +125,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   // Load all settings forms
   loadSettings();
-
-  // Load the navbar dynamically
-  async function loadNavbar() {
-    try {
-      const response = await fetch("../config/navbar.json");
-      const data = await response.json();
-      const navbar = document.getElementById("navbar");
-      navbar.innerHTML = "";
-      data.items.forEach(item => {
-        if (item.visible) {
-          navbar.innerHTML += `<li><a href="${item.link}" ${item.external ? 'target="_blank"' : ''}>${item.name}</a></li>`;
-        }
-      });
-    } catch (error) {
-      console.error("Error loading navbar:", error);
-    }
-  }
-  loadNavbar();
 });
 
 // Sidebar toggle function
