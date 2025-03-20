@@ -18,5 +18,14 @@
     { "name": "servo_status", "enabled": true },
     { "name": "servo_rotation", "enabled": true },
     { "name": "sd_status", "enabled": true }
-  ]
+  ],
+  "serial": {
+    "defaultFormat": "delimiter",
+    "delimiter": "=",
+    "trimSpaces": true,
+    "formatExamples": {
+      "json": "{ \"Altitude\": 9.0, \"Temperature\": 5.0, ... }",
+      "delimiter": "Altitude = 9.0"
+    }
+  }
 }
