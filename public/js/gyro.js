@@ -122,10 +122,19 @@ async function initCanSatVisualization() {
             'ZXY'
         ));
 
-        // Update HTML elements with gyro values
-        document.getElementById("gyroX")?.textContent = "X: " + latestData[gyroIndexes.x];
-        document.getElementById("gyroY")?.textContent = "Y: " + latestData[gyroIndexes.y];
-        document.getElementById("gyroZ")?.textContent = "Z: " + latestData[gyroIndexes.z];
+        // Update HTML elements with gyro values if they exist
+        const gyroXElem = document.getElementById("gyroX");
+        if (gyroXElem) {
+            gyroXElem.textContent = "X: " + latestData[gyroIndexes.x];
+        }
+        const gyroYElem = document.getElementById("gyroY");
+        if (gyroYElem) {
+            gyroYElem.textContent = "Y: " + latestData[gyroIndexes.y];
+        }
+        const gyroZElem = document.getElementById("gyroZ");
+        if (gyroZElem) {
+            gyroZElem.textContent = "Z: " + latestData[gyroIndexes.z];
+        }
 
         console.log("Target rotation updated");
     };
