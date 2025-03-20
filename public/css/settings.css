@@ -1,188 +1,129 @@
-/* Dark theme Settings Page */
-
-/* General Styles */
+/* General Body and Typography */
 body {
-    background-color: #121212;
-    color: #e0e0e0;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    max-height: 100vh;
-    overflow-x: hidden;
+  background-color: #121212;
+  color: #e0e0e0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
-/* Title */
-.title {
-    display: flex;
-    min-height: 50px;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    margin-bottom: -15px;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: #e0e0e0;
+/* Sidebar Styles (reuse nav.css styling as needed) */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background: #1e1e1e;
+  overflow-y: auto;
+  transition: left 0.3s ease;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+}
+.sidebar.active {
+  left: 0;
+}
+.sidebar .close-btn {
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  font-size: 28px;
+  cursor: pointer;
 }
 
-/* Horizontal Rule */
-hr {
-    width: 100%;
-    border: 1px solid #444;
-    margin-bottom: 20px;
+/* Open Sidebar Button */
+.open-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  cursor: pointer;
+  z-index: 1000;
 }
 
-/* Error Block */
-.error {
-    background-color: #e24a4a;
-    color: white;
-    text-align: center;
-    width: 90%;
-    border-radius: 8px;
-    border: 2px solid #222;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    padding: 10px;
-    margin-bottom: 10px;
+/* Main Content Styles */
+.content {
+  margin-left: 20px;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+.content h1 {
+  text-align: center;
+  margin-bottom: 10px;
 }
 
-.errorContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 2vh;
+/* Settings Container */
+#settingsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* Main Container */
-.container {
-    margin: 10px 2.5%;
+/* Settings Section (each form) */
+.settings-section {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+.settings-section h2 {
+  margin-top: 0;
+  border-bottom: 1px solid #444;
+  padding-bottom: 5px;
+  margin-bottom: 15px;
 }
 
-/* Form Container */
-.formContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    max-width: 100%;
-    width: 100%;
-    text-align: center;
-    font-size: 14px;
-    margin-bottom: 2vh;
+/* Form Elements */
+.settings-section form {
+  display: flex;
+  flex-direction: column;
+}
+.settings-section label {
+  font-weight: bold;
+  margin: 10px 0 5px;
+}
+.settings-section input[type="text"],
+.settings-section textarea,
+.settings-section select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background-color: #222;
+  color: #e0e0e0;
+}
+.settings-section fieldset {
+  border: 1px solid #444;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  padding: 10px;
+}
+.settings-section fieldset legend {
+  padding: 0 5px;
+  font-weight: bold;
 }
 
-/* Form Section */
-.formSection {
-    width: 90%;
-    max-width: 600px;
-    background-color: #1e1e1e;
-    color: #e0e0e0;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    margin-bottom: 20px;
+/* Buttons */
+.settings-section button {
+  padding: 10px;
+  background-color: #01e774;
+  border: none;
+  border-radius: 4px;
+  color: #121212;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.settings-section button:hover {
+  background-color: #02c065;
 }
 
-/* Form Inputs */
-label {
-    display: block;
-    font-size: 16px;
-    margin: 10px 0 5px;
-    color: #e0e0e0;
-}
-
-input, select, textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #444;
-    border-radius: 5px;
-    background-color: #222;
-    color: #e0e0e0;
-}
-
-/* Checkbox Styling */
-.checkboxContainer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    margin-bottom: 10px;
-}
-
-.checkboxContainer input {
-    margin-right: 10px;
-}
-
-/* Save Button */
-.saveBtn {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #01e774;
-    color: #121212;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    text-align: center;
-}
-
-.saveBtn:hover {
-    background-color: #02c065;
-}
-
-/* Reset Button */
-.resetBtn {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #e24a4a;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    text-align: center;
-    margin-top: 10px;
-}
-
-.resetBtn:hover {
-    background-color: #c03434;
-}
-
-/* Download Buttons */
-.download {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-}
-
-.download a {
-    background-color: #333;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-weight: bold;
-    text-decoration: none;
-    margin: 5px;
-    cursor: pointer;
-    color: #e0e0e0;
-}
-
-/* Responsive Design */
-@media screen and (max-width: 768px) {
-    .container {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .formSection {
-        width: 100%;
-    }
-
-    h1 {
-        text-align: center;
-    }
-}
-
-@media screen and (max-width: 945px) {
-    .formSection {
-        width: 100%;
-    }
+/* Status Message */
+.status {
+  margin-top: 10px;
+  text-align: center;
+  font-weight: bold;
 }
