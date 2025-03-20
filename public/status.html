@@ -12,17 +12,17 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
-    <!-- Load Status and Navbar JS -->
+    <!-- Load Status and Global Navbar JS -->
     <script src="js/status.js" defer></script>
-    <script src="js/navbar.js" defer></script>
+    <script src="js/global.js" defer></script>
 </head>
-<body>
-    <!-- Sidebar -->
+<body onload="initializeNavbar()">
+    <!-- Sidebar (loaded dynamically via global.js) -->
     <div class="sidebar" id="sidebar">
         <button class="close-btn" onclick="toggleSidebar()">×</button>
         <h2>Vila2Sat</h2>
-        <ul id="sidebarItems">
-            <!-- Dynamic Sidebar Items from navbar.json -->
+        <ul id="sidebar-links">
+            <!-- Global JS (initializeNavbar) will populate this -->
         </ul>
     </div>
 
@@ -35,13 +35,11 @@
             <h3 class="child">System Status</h3>
         </div>
         <hr>
-
         <div class="container">
             <div class="blockContainer" id="statusBlocks">
                 <!-- Status Cards will be dynamically inserted here -->
             </div>
         </div>
-
         <div class="errorContainer">
             <div class="error" id="errorBlock">
                 <p id="sysText">All components are offline, system status will be shown as offline!</p>
@@ -49,7 +47,7 @@
         </div>
     </div>
 
-    <!-- Sidebar Toggle Script -->
+    <!-- Inline Sidebar Toggle Script -->
     <script>
         function toggleSidebar() {
             document.getElementById("sidebar").classList.toggle("active");
