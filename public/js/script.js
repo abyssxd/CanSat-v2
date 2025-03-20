@@ -15,7 +15,7 @@ async function loadConfig(filePath) {
  * Dynamic Map Setup Using Leaflet
  ***************************************/
 async function setupMap() {
-  const mapConfig = await loadConfig("../config/map.json");
+  const mapConfig = await loadConfig("/config/map.json");
   if (!mapConfig) return;
 
   const mapElement = document.getElementById("map");
@@ -95,7 +95,7 @@ const darkChartOptions = {
 let charts = {}; // Store dynamically created charts
 
 async function setupCharts() {
-  const graphConfig = await loadConfig("../config/graphs.json");
+  const graphConfig = await loadConfig("/config/graphs.json");
   if (!graphConfig) return;
 
   const chartContainer = document.getElementById("chartContainer");
@@ -125,7 +125,17 @@ async function setupCharts() {
       // Create the chart
       charts[graph.id] = new Chart(canvas.getContext("2d"), {
         type: "line",
-        data: { labels: [], datasets: [{ label: graph.label, data: [], backgroundColor: graph.color, borderColor: graph.color, borderWidth: 1, pointRadius: 0 }] },
+        data: {
+          labels: [],
+          datasets: [{
+            label: graph.label,
+            data: [],
+            backgroundColor: graph.color,
+            borderColor: graph.color,
+            borderWidth: 1,
+            pointRadius: 0
+          }]
+        },
         options: darkChartOptions,
         plugins: [imageBG],
       });
@@ -156,7 +166,7 @@ ws.onclose = function (event) {
 };
 
 ws.onmessage = async (event) => {
-  const graphConfig = await loadConfig("../config/graphs.json");
+  const graphConfig = await loadConfig("/config/graphs.json");
   if (!graphConfig) return;
 
   // Parse incoming CSV data
@@ -205,30 +215,13 @@ function downloadChart(chart, fileName) {
 }
 
 /***************************************
- * Sidebar Configuration (From navbar.json)
- ***************************************/
-async function setupSidebar() {
-  const navConfig = await loadConfig("../config/navbar.json");
-  if (!navConfig) return;
-
-  const sidebarLinks = document.getElementById("sidebar-links");
-  sidebarLinks.innerHTML = "";
-
-  navConfig.navbar.forEach((item) => {
-    const li = document.createElement("li");
-    const a = document.createElement("a");
-    a.href = item.href;
-    a.textContent = item.label;
-    li.appendChild(a);
-    sidebarLinks.appendChild(li);
-  });
-}
-
-/***************************************
  * Initialize Everything
  ***************************************/
 async function initializeDashboard() {
-  await setupSidebar();
+  // Call initializeNavbar() from global.js
+  if (typeof initializeNavbar === "function") {
+    await initializeNavbar();
+  }
   await setupCharts();
   await setupMap();
 }
