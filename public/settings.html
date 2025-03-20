@@ -1,160 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings | Vila2Sat</title>
-    <link rel="stylesheet" type="text/css" href="css/settings.css">
-    <link rel="stylesheet" type="text/css" href="css/nav.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Settings | Vila2Sat</title>
+  <link rel="stylesheet" type="text/css" href="css/nav.css">
+  <link rel="stylesheet" type="text/css" href="css/settings.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <button class="close-btn" onclick="toggleSidebar()">×</button>
-        <h2>Vila2Sat</h2>
-        <ul id="navbar"></ul>
-    </div>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <button class="close-btn" onclick="toggleSidebar()">×</button>
+    <h2>Vila2Sat</h2>
+    <ul id="navbar"></ul>
+  </div>
 
-    <!-- Sidebar Toggle Button -->
-    <button class="open-btn" onclick="toggleSidebar()">☰</button>
+  <!-- Sidebar Toggle Button -->
+  <button class="open-btn" onclick="toggleSidebar()">☰</button>
 
-    <!-- Main Content -->
-    <div class="content">
-        <h1>Settings</h1>
-        <p>Modify system configurations dynamically.</p>
-        
-        <div id="settingsContainer"></div>
-    </div>
+  <!-- Main Content -->
+  <div class="content">
+    <h1>Settings</h1>
+    <p>Modify system configurations dynamically.</p>
+    <div id="settingsContainer"></div>
+  </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", async function () {
-            const settingsContainer = document.getElementById("settingsContainer");
-
-            // JSON files to load
-            const jsonFiles = [
-                "config/navbar.json",
-                "config/graphs.json",
-                "config/map.json",
-                "config/backup.json",
-                "config/csvFields.json",
-                "config/gyroscopeModel.json",
-                "config/statusCards.json"
-            ];
-
-            // Function to create a form for each JSON file
-            async function loadSettings() {
-                for (const file of jsonFiles) {
-                    try {
-                        const response = await fetch(`../${file}`);
-                        const data = await response.json();
-                        createForm(file, data);
-                    } catch (error) {
-                        console.error(`Error loading ${file}:`, error);
-                    }
-                }
-            }
-
-            // Function to create and display a form
-            function createForm(fileName, jsonData) {
-                const section = document.createElement("div");
-                section.className = "settings-section";
-                section.innerHTML = `<h2>${fileName.replace("config/", "").replace(".json", "").toUpperCase()}</h2>`;
-
-                const form = document.createElement("form");
-                form.dataset.file = fileName;
-
-                function generateInput(key, value, path = "") {
-                    const fullPath = path ? `${path}.${key}` : key;
-                    let inputField = "";
-
-                    if (typeof value === "boolean") {
-                        inputField = `<input type="checkbox" name="${fullPath}" ${value ? "checked" : ""}>`;
-                    } else if (typeof value === "object" && value !== null) {
-                        inputField = `<fieldset><legend>${key}</legend>`;
-                        for (const subKey in value) {
-                            inputField += generateInput(subKey, value[subKey], fullPath);
-                        }
-                        inputField += `</fieldset>`;
-                    } else {
-                        inputField = `<input type="text" name="${fullPath}" value="${value}">`;
-                    }
-
-                    return `<label>${key}: ${inputField}</label><br>`;
-                }
-
-                for (const key in jsonData) {
-                    form.innerHTML += generateInput(key, jsonData[key]);
-                }
-
-                form.innerHTML += `<button type="submit">Save Changes</button>`;
-                section.appendChild(form);
-                settingsContainer.appendChild(section);
-
-                form.addEventListener("submit", async function (event) {
-                    event.preventDefault();
-                    saveSettings(form);
-                });
-            }
-
-            // Function to collect and save form data
-            async function saveSettings(form) {
-                const fileName = form.dataset.file;
-                const formData = new FormData(form);
-                let jsonData = {};
-
-                for (const [key, value] of formData.entries()) {
-                    const keys = key.split(".");
-                    let ref = jsonData;
-                    for (let i = 0; i < keys.length - 1; i++) {
-                        ref[keys[i]] = ref[keys[i]] || {};
-                        ref = ref[keys[i]];
-                    }
-                    ref[keys[keys.length - 1]] = value === "on" ? true : isNaN(value) ? value : Number(value);
-                }
-
-                try {
-                    const response = await fetch(`/update-json`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ file: fileName, data: jsonData })
-                    });
-                    if (response.ok) {
-                        alert(`Settings for ${fileName} updated successfully.`);
-                    } else {
-                        alert(`Failed to update ${fileName}`);
-                    }
-                } catch (error) {
-                    console.error("Error saving settings:", error);
-                }
-            }
-
-            // Load the settings forms
-            loadSettings();
-
-            // Load the navbar dynamically
-            async function loadNavbar() {
-                try {
-                    const response = await fetch("../config/navbar.json");
-                    const data = await response.json();
-                    const navbar = document.getElementById("navbar");
-                    navbar.innerHTML = "";
-                    data.items.forEach(item => {
-                        if (item.visible) {
-                            navbar.innerHTML += `<li><a href="${item.link}" ${item.external ? 'target="_blank"' : ''}>${item.name}</a></li>`;
-                        }
-                    });
-                } catch (error) {
-                    console.error("Error loading navbar:", error);
-                }
-            }
-
-            loadNavbar();
-        });
-
-        function toggleSidebar() {
-            document.getElementById("sidebar").classList.toggle("active");
-        }
-    </script>
+  <script src="js/settings.js"></script>
 </body>
 </html>
