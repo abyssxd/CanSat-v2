@@ -124,6 +124,33 @@ app.post('/update-json', (req, res) => {
   });
 });
 
+// ----- Endpoints for Serving Configuration Files -----
+
+// Route to serve individual config JSON files from the "config" folder
+app.get('/config/:filename', (req, res) => {
+  const filename = req.params.filename;
+  // Only allow .json files
+  if (!filename.endsWith('.json')) {
+    return res.status(400).json({ error: "Invalid file requested." });
+  }
+  const filePath = path.join(configFolder, filename);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: "Configuration file not found." });
+  }
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      return res.status(500).json({ error: "Error reading configuration file." });
+    }
+    try {
+      const jsonData = JSON.parse(data);
+      res.json(jsonData);
+    } catch (parseErr) {
+      res.status(500).json({ error: "Error parsing configuration file." });
+    }
+  });
+});
+
+
 // ----- Endpoints for WebSocket Data Broadcasting -----
 
 // Create HTTP server and attach WebSocket server

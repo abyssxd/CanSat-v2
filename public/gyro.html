@@ -10,26 +10,22 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
-  <!-- Custom Styles and Scripts -->
+  <!-- Custom Styles -->
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <link rel="stylesheet" type="text/css" href="css/nav.css">
   <link rel="stylesheet" type="text/css" href="css/gyro.css">
-  <!-- Notice the type="module" attribute here -->
+  
+  <!-- Global JS to load navbar -->
+  <script src="js/global.js" defer></script>
+  <!-- Gyroscope-specific JS -->
   <script type="module" src="js/gyro.js"></script>
 </head>
-<body>
+<body onload="initializeNavbar()">
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
       <button class="close-btn" onclick="toggleSidebar()">×</button>
       <h2>Vila2Sat</h2>
-      <ul>
-          <li><a href="console.html">Console</a></li>
-          <li><a href="status.html">System Status</a></li>
-          <li><a href="index.html">Overview</a></li>
-          <li><a href="gyro.html">Gyroscope</a></li>
-          <li><a href="charts.html">Graphs</a></li>
-          <li><a href="https://github.com/abyssxd/CanSat-v2" target="_blank">GitHub</a></li>
-      </ul>
+      <ul id="sidebar-links"></ul>
   </div>
 
   <!-- Sidebar Toggle Button (Visible on Mobile) -->
