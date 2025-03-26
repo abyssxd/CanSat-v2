@@ -3,19 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <title>Vila2Sat Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- External Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" type="text/css" href="css/charts.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="css/nav.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+  <!-- Global & Page Scripts -->
+  <script src="js/global.js" defer></script>
+  <script src="js/charts.js" defer></script>
 </head>
-<body>
-  <!-- Sidebar -->
+<body onload="initializeNavbar()">
+  <!-- Sidebar (populated by global.js) -->
   <div class="sidebar" id="sidebar">
     <button class="close-btn" onclick="toggleSidebar()">×</button>
     <h2>Vila2Sat</h2>
-    <ul id="nav-links"></ul>
+    <ul id="sidebar-links">
+      <!-- Global JS will populate this -->
+    </ul>
   </div>
 
   <!-- Sidebar Toggle Button (Visible on Mobile) -->
@@ -25,88 +33,15 @@
   <div class="content">
     <div class="title" id="graphButtons"></div>
     <hr>
-
     <div class="container">
-        <div class="chartContainer" id="chartContainer"></div>
+      <div class="chartContainer" id="chartContainer"></div>
     </div>
   </div>
 
-  <script src="js/charts.js"></script>
-
-  <!-- Sidebar and Dynamic Graph Script -->
+  <!-- Inline Utility Script for Sidebar Toggle -->
   <script>
-    // Load navigation bar dynamically
-    fetch("../config/navbar.json")
-      .then(response => response.json())
-      .then(navConfig => {
-        const navLinks = document.getElementById("nav-links");
-        navConfig.navbar.forEach(item => {
-          const li = document.createElement("li");
-          const link = document.createElement("a");
-          link.href = item.link;
-          link.textContent = item.label;
-          li.appendChild(link);
-          navLinks.appendChild(li);
-        });
-      });
-
     function toggleSidebar() {
-      const sidebar = document.getElementById("sidebar");
-      sidebar.classList.toggle("active");
-    }
-
-    // Load graphs dynamically
-    fetch("../config/graphs.json")
-      .then(response => response.json())
-      .then(graphConfig => {
-        const graphButtons = document.getElementById("graphButtons");
-        const chartContainer = document.getElementById("chartContainer");
-
-        graphConfig.graphs.forEach(graph => {
-          if (graph.enabled) {
-            // Create button to toggle graph visibility
-            const button = document.createElement("a");
-            button.classList.add(`${graph.id}_show`);
-            button.textContent = graph.label;
-            button.onclick = () => showGraph(graph.id);
-            graphButtons.appendChild(button);
-
-            // Create chart container
-            const chartDiv = document.createElement("div");
-            chartDiv.id = `${graph.id}chart`;
-            chartDiv.classList.add("chart");
-            chartDiv.style.display = "none"; // Hide initially
-
-            // Add canvas for Chart.js
-            const canvas = document.createElement("canvas");
-            canvas.id = graph.id;
-            chartDiv.appendChild(canvas);
-
-            // Add download button
-            const downloadDiv = document.createElement("div");
-            downloadDiv.classList.add("download", graph.id);
-            const downloadLink = document.createElement("a");
-            downloadLink.id = `${graph.id}_png`;
-            downloadLink.textContent = "Download Chart Image";
-            downloadDiv.appendChild(downloadLink);
-
-            chartDiv.appendChild(downloadDiv);
-            chartContainer.appendChild(chartDiv);
-          }
-        });
-
-        // Show the first enabled graph by default
-        const firstEnabledGraph = graphConfig.graphs.find(graph => graph.enabled);
-        if (firstEnabledGraph) {
-          showGraph(firstEnabledGraph.id);
-        }
-      });
-
-    function showGraph(graphId) {
-      document.querySelectorAll(".chart").forEach(chart => {
-        chart.style.display = "none";
-      });
-      document.getElementById(`${graphId}chart`).style.display = "block";
+      document.getElementById("sidebar").classList.toggle("active");
     }
   </script>
 </body>
